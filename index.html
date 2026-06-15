@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Jandu Petroleum — Inventory Manager</title>
+<!-- Favicon: use the JP logo as SVG data URI for broad browser support -->
+<link rel="icon" type="image/png" href="https://www.jandupetroleum.com/_next/image?url=%2Flogo%2Flogo.png&w=64&q=75">
+<link rel="apple-touch-icon" href="https://www.jandupetroleum.com/_next/image?url=%2Flogo%2Flogo.png&w=180&q=75">
+<!-- Fallback favicon as inline SVG (works even offline) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='12' fill='%231a1a2e'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial Black,Arial' font-weight='900' font-size='28' fill='%23c8102e'>JP</text></svg>">
+<meta name="application-name" content="Jandu Inventory">
+<meta name="apple-mobile-web-app-title" content="Jandu Inventory">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#1a1a2e">
+<noscript></noscript>
+<!-- SheetJS loaded on demand when export is triggered -->
+<style>
+:root{
+  --bg:#f4f5f7;--card:#fff;--text:#1a1a2e;--muted:#6b7280;--border:#e2e5ea;
+  --accent:#c8102e;--al:#fce8eb;
+  --danger:#dc2626;--db:#fee2e2;
+  --success:#16a34a;--sb:#dcfce7;
+  --warning:#d97706;--wb:#fef3c7;
+  --brand:#c8102e;--brand-dark:#9b0c22;--brand-light:#fce8eb;
+  --navy:#1a1a2e;
+  --rad:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);padding-bottom:76px;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* HEADER */
+#hdr{background:var(--navy);border-bottom:2px solid var(--brand);padding:0 14px;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:8px;height:56px}
+#hdr .htitle{font-size:17px;font-weight:700;flex:1;text-align:center;color:#fff}
+.hbtn{background:none;border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px;padding:6px 4px;white-space:nowrap;min-width:52px;opacity:.9}
+.hbtn:active{opacity:.6}
+.hbtn i{font-size:18px}
+.hbtn.right{justify-content:flex-end}
+#hdr-brand{flex:1;display:flex;align-items:center;justify-content:center}
+#brand-logo{height:36px;width:auto;object-fit:contain;filter:brightness(0) invert(1)}
+#brand-text{flex-direction:column;align-items:center;gap:0}
+#brand-name{font-size:15px;font-weight:800;color:#fff;letter-spacing:.02em;text-transform:uppercase}
+
+/* BOTTOM NAV */
+#bnav{position:fixed;bottom:0;left:0;right:0;background:var(--navy);border-top:2px solid var(--brand);display:flex;z-index:60;padding-bottom:env(safe-area-inset-bottom)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:7px 2px 9px;font-size:10px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;border:none;background:none;position:relative;transition:color .12s}
+.ni.active{color:#fff}
+.ni.active i{color:var(--brand)}
+.ni i{font-size:22px;line-height:1}
+.nbdg{position:absolute;top:3px;right:calc(50% - 22px);background:var(--brand);color:#fff;font-size:9px;border-radius:10px;min-width:15px;height:15px;display:flex;align-items:center;justify-content:center;padding:0 3px;font-weight:700}
+
+main{padding:12px 15px 20px;max-width:700px;margin:0 auto}
+
+/* TABS */
+.vtabs,.ctabs{display:flex;gap:7px;overflow-x:auto;padding-bottom:9px;scrollbar-width:none}
+.vtabs::-webkit-scrollbar,.ctabs::-webkit-scrollbar{display:none}
+.vtab{flex-shrink:0;padding:7px 13px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .12s,color .12s}
+.vtab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.vtab .nb{background:var(--danger);color:#fff;border-radius:10px;font-size:9px;padding:0 5px;margin-left:4px;vertical-align:1px}
+.vtab.active .nb{background:#fff;color:var(--danger)}
+.ctab{flex-shrink:0;padding:5px 10px;border-radius:14px;background:var(--card);border:1px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;transition:background .12s}
+.ctab.active{background:var(--brand-light);color:var(--brand);border-color:var(--brand)}
+.ctab .nb{background:var(--danger);color:#fff;border-radius:8px;font-size:9px;padding:0 4px;margin-left:3px}
+
+/* SEC HDR */
+.sh{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:5px}
+.sh:first-child{margin-top:0}
+.sh i{font-size:14px}
+
+/* ITEM CARD (count) */
+.ic{background:var(--card);border:1px solid var(--border);border-left:4px solid transparent;border-radius:var(--rad);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:9px}
+.ic.crit{border-left-color:var(--danger);background:var(--db)}
+.ic.low{border-left-color:var(--warning);background:var(--wb)}
+.ic.ok{border-left-color:var(--success)}
+.ii{flex:1;min-width:0}
+.iname{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.imeta{font-size:10px;color:var(--muted);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.chip{font-size:9px;font-weight:700;padding:1px 5px;border-radius:5px;text-transform:uppercase}
+.chip.crit{background:var(--danger);color:#fff}
+.chip.low{background:var(--warning);color:#fff}
+.chip.ok{background:var(--sb);color:var(--success)}
+/* qty controls */
+.qw{display:flex;flex-direction:column;align-items:center;gap:2px}
+.qi{width:56px;height:40px;font-size:16px;text-align:center;border:1.5px solid var(--border);border-radius:8px;font-weight:700;color:var(--text);background:var(--card)}
+.qi:focus{outline:2px solid var(--brand);border-color:var(--brand)}
+.sbtns{display:flex;gap:3px}
+.sbtn{width:26px;height:19px;border:1px solid var(--border);background:var(--card);border-radius:5px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ORDER CARDS */
+.oc{background:var(--card);border:1px solid var(--border);border-left:4px solid var(--brand);border-radius:var(--rad);padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;gap:9px}
+.oc.crit{border-left-color:var(--danger)}
+.oqi{width:56px;height:38px;font-size:14px;text-align:center;border:1.5px solid var(--brand);border-radius:8px;font-weight:700;color:var(--brand);background:var(--brand-light)}
+.oqi:focus{outline:2px solid var(--accent)}
+.ounit{font-size:9px;color:var(--muted);text-align:center;margin-top:2px}
+
+/* VENDOR ORDER CARDS */
+.voc{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:13px;margin-bottom:9px;cursor:pointer;display:flex;align-items:center;gap:11px;transition:border-color .12s}
+.voc:active{border-color:var(--brand)}
+.vico{width:42px;height:42px;border-radius:10px;background:var(--brand-light);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.vbody{flex:1}
+.vtitle{font-size:14px;font-weight:700}
+.vmeta{font-size:11px;color:var(--muted);margin-top:3px}
+.vbdg{background:var(--db);color:var(--danger);font-size:11px;font-weight:700;padding:3px 9px;border-radius:9px;white-space:nowrap}
+
+/* HOME STAT */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:13px}
+.sc .sn{font-size:26px;font-weight:800;line-height:1}
+.sc .sl{font-size:11px;color:var(--muted);margin-top:4px}
+.sc.crit .sn{color:var(--danger)}
+.sc.low .sn{color:var(--warning)}
+.sc.ok .sn{color:var(--success)}
+.sc.neutral .sn{color:var(--brand)}
+
+/* CTA */
+.cta{display:flex;align-items:center;gap:13px;border-radius:var(--rad);padding:15px;margin-bottom:9px;border:none;cursor:pointer;width:100%;text-align:left;transition:opacity .12s}
+.cta:active{opacity:.85}
+.cta.primary{background:linear-gradient(135deg,var(--brand) 0%,var(--brand-dark) 100%);color:#fff;box-shadow:0 4px 12px rgba(200,16,46,.25)}
+.cta.secondary{background:var(--card);border:1px solid var(--border);color:var(--text)}
+.cta .cico{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.cta.primary .cico{background:rgba(255,255,255,.2)}
+.cta.secondary .cico{background:var(--al);color:var(--accent)}
+.cta .cbody{flex:1}
+.cta .ctitle{font-size:14px;font-weight:700}
+.cta .csub{font-size:11px;margin-top:2px;opacity:.85}
+
+/* MANAGE MENU */
+.mlist{display:flex;flex-direction:column;gap:7px}
+.mrow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:13px;cursor:pointer;transition:border-color .12s}
+.mrow:active{border-color:var(--brand)}
+.mico{width:40px;height:40px;border-radius:9px;background:var(--brand-light);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
+.mbody{flex:1}
+.mtitle{font-size:14px;font-weight:700}
+.msub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* LIST ROWS */
+.lr{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:10px 12px;margin-bottom:7px}
+.lbody{flex:1;min-width:0}
+.ltitle{font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lsub{font-size:10px;color:var(--muted);margin-top:2px}
+.lacts{display:flex;gap:5px;flex-shrink:0}
+
+/* ORDER HISTORY */
+.hcard{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:13px;margin-bottom:9px}
+.hcard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.hcard-vendor{font-size:14px;font-weight:700}
+.hcard-date{font-size:11px;color:var(--muted)}
+.hcard-meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.hcard-acts{display:flex;gap:7px}
+.hcard-acts .btn{flex:1}
+
+/* FORMS */
+.fr{margin-bottom:11px}
+.fr label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:.03em}
+.fr input,.fr select,.fr textarea{width:100%;height:40px;padding:0 11px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--card);color:var(--text);font-family:inherit;appearance:none;-webkit-appearance:none}
+.fr textarea{height:auto;padding:9px 11px}
+.fhint{font-size:10px;color:var(--muted);margin-top:3px}
+.fc{display:flex;gap:9px}
+.fc>.fr{flex:1}
+.uarow{display:flex;gap:7px;margin-top:5px}
+.uarow input{flex:1;height:34px;padding:0 9px;border:1px solid var(--border);border-radius:7px;font-size:12px}
+.utag{display:inline-flex;align-items:center;gap:3px;background:var(--al);color:var(--accent);font-size:11px;font-weight:700;padding:3px 7px;border-radius:5px;margin:2px}
+.utag span{cursor:pointer;font-size:14px;line-height:1;opacity:.7}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:9px 13px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:12px;font-weight:700;color:var(--text);cursor:pointer;font-family:inherit;transition:opacity .12s;white-space:nowrap}
+.btn:active{opacity:.75}
+.btn i{font-size:15px}
+.btn-p{background:var(--brand);color:#fff;border-color:var(--brand-dark)}
+.btn-d{background:var(--db);color:var(--danger);border-color:var(--db)}
+.btn-s{background:var(--sb);color:var(--success);border-color:var(--sb)}
+.btn-w{background:var(--wb);color:var(--warning);border-color:var(--wb)}
+.btn-block{width:100%}
+.btn-sm{padding:5px 9px;font-size:11px}
+.btn-lg{padding:13px 16px;font-size:14px}
+.tbar{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap}
+.tbar .btn{flex:1;min-width:90px}
+
+/* FILTER ROW */
+.frow{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.frow select,.frow input{flex:1;min-width:100px;height:36px;padding:0 9px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:var(--card);color:var(--text)}
+
+/* MODAL */
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:100}
+.ovl.open{display:flex}
+.modal{background:var(--card);border-radius:16px 16px 0 0;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;padding:16px 15px 32px}
+.modal h2{font-size:16px;font-weight:700;margin-bottom:13px}
+.mtop{position:sticky;top:0;background:var(--card);padding-bottom:7px;display:flex;align-items:center;justify-content:space-between;z-index:1;border-bottom:1px solid var(--border);margin-bottom:12px}
+.mtop h2{margin:0}
+
+/* ORDER PRINT */
+textarea.otxt{width:100%;min-height:160px;font-family:monospace;font-size:11px;border:1px solid var(--border);border-radius:7px;padding:9px;color:var(--text);background:var(--bg)}
+
+/* TOAST */
+#update-banner{position:fixed;top:56px;left:0;right:0;background:#1a1a2e;color:#fff;font-size:12px;font-weight:600;padding:10px 16px;display:none;align-items:center;justify-content:space-between;z-index:55;border-bottom:2px solid var(--brand)}
+#update-banner button{background:var(--brand);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:700;cursor:pointer}
+#toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%);background:#1f2430ee;color:#fff;padding:8px 16px;border-radius:18px;font-size:12px;z-index:300;opacity:0;transition:opacity .2s;pointer-events:none;max-width:85%;text-align:center;backdrop-filter:blur(4px)}
+#toast.show{opacity:1}
+
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:0 12px;margin-bottom:10px;transition:border-color .15s}
+.search-bar:focus-within{border-color:var(--brand)}
+.search-bar i{font-size:18px;color:var(--muted);flex-shrink:0}
+.search-bar input{flex:1;height:40px;border:none;background:transparent;font-size:14px;color:var(--text);font-family:inherit}
+.search-bar input:focus{outline:none}
+.search-bar input::placeholder{color:var(--muted)}
+.search-bar .clr-btn{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0;display:none;line-height:1}
+.search-bar.has-text .clr-btn{display:block}
+.search-highlight{background:#fff3b0;border-radius:2px}
+.no-results{text-align:center;color:var(--muted);padding:24px 16px;font-size:13px}
+.no-results i{font-size:32px;display:block;margin-bottom:8px;color:var(--border)}
+
+/* Order page add-item panel */
+.add-to-order-panel{background:var(--card);border:1.5px dashed var(--brand);border-radius:var(--rad);padding:14px;margin-bottom:14px}
+.add-to-order-panel .panel-title{font-size:13px;font-weight:700;color:var(--brand);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.search-results-list{max-height:240px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;margin-top:6px;background:var(--card)}
+.sr-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.sr-item:last-child{border-bottom:none}
+.sr-item:active{background:var(--brand-light)}
+.sr-item .sri-info{flex:1;min-width:0}
+.sr-item .sri-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sr-item .sri-meta{font-size:10px;color:var(--muted);margin-top:1px}
+.sr-item .sri-add{background:var(--brand);color:#fff;border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:16px}
+.sr-item.already-added{opacity:.5;pointer-events:none}
+.sr-item.already-added .sri-add{background:var(--success)}
+.sri-qty-row{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.sri-qty-inp{width:54px;height:34px;text-align:center;border:1.5px solid var(--brand);border-radius:7px;font-size:14px;font-weight:700;color:var(--brand);background:var(--brand-light);font-family:inherit}
+.sri-qty-inp:focus{outline:none;border-color:var(--brand-dark)}
+.sri-unit{font-size:10px;color:var(--muted);white-space:nowrap}
+.sri-confirm{width:30px;height:30px;border-radius:7px;border:none;background:var(--brand);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sri-cancel{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sri-added{background:var(--success)!important}
+.sr-item.already-added .sri-add{background:var(--success)}
+.manual-qty-row{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.manual-qty-row label{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.manual-qty-row input{width:70px;height:36px;text-align:center;border:1.5px solid var(--brand);border-radius:7px;font-size:14px;font-weight:700;color:var(--brand);background:var(--brand-light)}
+.order-hint{
+  display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;
+  padding:5px 8px;border-radius:8px;white-space:nowrap;flex-shrink:0;
+  min-width:64px;justify-content:center;transition:all .15s;
+  background:transparent;color:transparent;
+}
+.order-hint.has-order{background:var(--brand-light);color:var(--brand)}
+.order-hint.has-order.crit{background:var(--brand-dark);color:#fff;animation:pulse 1.5s ease-in-out infinite}
+.order-hint.is-ok{background:var(--sb);color:var(--success)}
+.order-hint i{font-size:12px}
+.hint-unit{font-size:9px;opacity:.8;margin-left:2px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.empty{text-align:center;color:var(--muted);padding:36px 18px;font-size:13px}
+.empty i{font-size:40px;display:block;margin-bottom:9px;color:var(--border)}
+
+.season-badge{font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;white-space:nowrap}
+.szn-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rad);padding:13px;margin-bottom:9px}
+.szn-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.szn-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.szn-name{font-size:14px;font-weight:700;flex:1}
+.szn-range{font-size:11px;color:var(--muted)}
+.mult-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.mult-cell{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 9px;display:flex;flex-direction:column;gap:3px}
+.mult-cell .mc-label{font-size:10px;color:var(--muted);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mult-cell input{width:100%;height:30px;font-size:13px;font-weight:700;text-align:center;border:none;background:transparent;color:var(--text)}
+.mult-cell input:focus{outline:2px solid var(--accent);border-radius:5px}
+.mult-cell.active-szn{border-color:var(--accent);background:var(--al)}
+.szn-active-chip{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;color:#fff}
+.divider{height:1px;background:var(--border);margin:14px 0}
+.divider{height:1px;background:var(--border);margin:14px 0}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<script>
+// Register service worker for offline support
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js')
+      .then(function(reg){
+        console.log('SW registered:', reg.scope);
+        // Listen for updates
+        reg.addEventListener('updatefound', function(){
+          const newWorker = reg.installing;
+          newWorker.addEventListener('statechange', function(){
+            if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
+              // New version available — show banner
+              document.getElementById('update-banner').style.display='flex';
+            }
+          });
+        });
+      })
+      .catch(function(err){ console.log('SW failed (needs HTTPS):', err); });
+  });
+}
+</script>
+</head>
+<body>
+
+<div id="update-banner">
+  <span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:14px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg> App update available</span>
+  <button onclick="window.location.reload()">Refresh now</button>
+</div>
+<div id="splash" style="position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s">
+  <img src="https://www.jandupetroleum.com/_next/image?url=%2Flogo%2Flogo.png&w=384&q=75" style="height:60px;width:auto;filter:brightness(0) invert(1);margin-bottom:16px" alt="Jandu Petroleum"
+    onerror="this.style.display='none';document.getElementById('splash-fallback').style.display='block'">
+  <div id="splash-fallback" style="display:none;font-size:22px;font-weight:800;color:#fff;letter-spacing:.05em;text-transform:uppercase;margin-bottom:16px">Jandu Petroleum</div>
+  <div style="font-size:13px;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase">Inventory Manager</div>
+  <div style="margin-top:28px;width:36px;height:36px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite"></div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+</div>
+<header id="hdr">
+  <button class="hbtn" id="back-btn" style="visibility:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg><span id="back-label">Back</span></button>
+  <div id="hdr-brand">
+    <img src="https://www.jandupetroleum.com/_next/image?url=%2Flogo%2Flogo.png&w=384&q=75" alt="Jandu Petroleum" id="brand-logo" onerror="this.style.display='none';document.getElementById('brand-text').style.display='flex'">
+    <div id="brand-text" style="display:none">
+      <span id="brand-name">Jandu Petroleum</span>
+    </div>
+  </div>
+  <span class="htitle" id="ptitle" style="display:none">Station Inventory</span>
+  <button class="hbtn right" id="hdr-act" style="visibility:hidden"></button>
+</header>
+
+<main id="main"></main>
+
+<nav id="bnav">
+  <button class="ni active" data-s="home"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12L12 5l7 7M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7M10 21v-6h4v6"/></svg><span>Home</span></button>
+  <button class="ni" data-s="count"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4M9 17h.01"/></svg><span>Count</span></button>
+  <button class="ni" data-s="order"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Order</span><span class="nbdg" id="onbdg" style="display:none"></span></button>
+  <button class="ni" data-s="history"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8v4l3 3M3.05 11a9 9 0 1 0 .5-3.5"/><path d="M3 4.5v4h4"/></svg><span>History</span></button>
+  <button class="ni" data-s="manage"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Manage</span></button>
+</nav>
+
+<!-- ITEM MODAL -->
+<div class="ovl" id="item-modal">
+<div class="modal">
+  <div class="mtop"><h2 id="im-title">Add item</h2><button class="btn btn-sm" data-close="item-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="fr"><label>Item name / description</label><input type="text" id="f-name" placeholder="e.g. Marlboro Red King Box"></div>
+  <div class="fc">
+    <div class="fr"><label>Vendor</label><select id="f-vendor"></select></div>
+    <div class="fr"><label>Group</label><select id="f-group"></select></div>
+  </div>
+  <div class="fc">
+    <div class="fr"><label>Item code / SKU</label><input type="text" id="f-sku" placeholder="Optional"></div>
+    <div class="fr"><label>Unit</label>
+      <select id="f-unit"></select>
+      <div class="uarow"><input type="text" id="f-unit-new" placeholder="Add unit…"><button class="btn btn-sm btn-p" id="unit-add-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg></button></div>
+    </div>
+  </div>
+  <div class="fc">
+    <div class="fr"><label>15-wk avg weekly sales</label><input type="number" id="f-avg" placeholder="0" min="0" step="0.01"><div class="fhint">Par = 2× this, auto-rounded</div></div>
+    <div class="fr"><label>Par override (optional)</label><input type="number" id="f-par" placeholder="Auto" min="0" step="1"><div class="fhint">Leave blank to auto-calculate</div></div>
+  </div>
+  <div class="fc">
+    <div class="fr"><label>Price per unit ($)</label><input type="number" id="f-price" placeholder="0.00" min="0" step="0.01"></div>
+    <div class="fr"><label>Order multiple</label><input type="number" id="f-mult" placeholder="1" min="1" step="1" value="1"></div>
+  </div>
+  <div class="fr"><label>Current on-hand qty</label><input type="number" id="f-curr" placeholder="Leave blank = not yet counted" min="0" step="1"><div class="fhint">Blank items are excluded from order suggestions</div></div>
+  <div class="fc" style="margin-top:6px">
+    <button class="btn btn-d" id="del-item-btn" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Delete</button>
+    <button class="btn btn-p btn-block" id="save-item-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m4 14v-4h4v4M8 4v4h6V4"/></svg> Save item</button>
+  </div>
+</div></div>
+
+<!-- VENDOR MODAL -->
+<div class="ovl" id="vendor-modal">
+<div class="modal">
+  <div class="mtop"><h2>Add vendor</h2><button class="btn btn-sm" data-close="vendor-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="fr"><label>Vendor name</label><input type="text" id="f-vname" placeholder="e.g. McLane, Sysco, Coca-Cola"></div>
+  <button class="btn btn-p btn-block" id="save-vendor-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add vendor</button>
+</div></div>
+
+<!-- GROUP MODAL -->
+<div class="ovl" id="group-modal">
+<div class="modal">
+  <div class="mtop"><h2>Add group</h2><button class="btn btn-sm" data-close="group-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="fr"><label>Vendor</label><select id="f-gvendor"></select></div>
+  <div class="fr"><label>Group / category name</label><input type="text" id="f-gname" placeholder="e.g. Marlboro, Energy Drinks, Snus"></div>
+  <button class="btn btn-p btn-block" id="save-group-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add group</button>
+</div></div>
+
+<!-- ORDER MODAL -->
+<div class="ovl" id="order-modal">
+<div class="modal">
+  <div class="mtop"><h2 id="om-title">Order</h2><button class="btn btn-sm" data-close="order-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div id="om-body"></div>
+  <div class="fr" style="margin-top:11px">
+    <label>Order text — copy &amp; paste into email or message</label>
+    <textarea class="otxt" id="om-txt" readonly></textarea>
+  </div>
+  <div class="tbar">
+    <button class="btn" id="om-copy"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg> Copy</button>
+    <button class="btn" id="om-print"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2M9 21h6a1 1 0 0 0 1-1v-5H8v5a1 1 0 0 0 1 1zM17 7V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2"/></svg> Print</button>
+    <button class="btn btn-s" id="om-xlsx"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Excel</button>
+  </div>
+  <button class="btn btn-p btn-block" id="om-email"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg> Open email app</button>
+  <div class="divider"></div>
+  <button class="btn btn-p btn-block btn-lg" id="om-confirm"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Confirm &amp; save to history</button>
+  <div class="fhint" style="text-align:center;margin-top:6px">Saving records this order in History so you can review or clone it later</div>
+</div></div>
+
+<!-- UNITS MODAL -->
+<div class="ovl" id="units-modal">
+<div class="modal">
+  <div class="mtop"><h2>Manage units</h2><button class="btn btn-sm" data-close="units-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="fr"><label>Add new unit</label>
+    <div class="uarow"><input type="text" id="um-new" placeholder="e.g. sleeve, roll, drum"><button class="btn btn-sm btn-p" id="um-add"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add</button></div>
+  </div>
+  <div class="fr"><label>All units (tap × to remove)</label><div id="um-list"></div></div>
+</div></div>
+
+<!-- CSV IMPORT MODAL -->
+<div class="ovl" id="csv-modal">
+<div class="modal">
+  <div class="mtop"><h2>Import CSV</h2><button class="btn btn-sm" data-close="csv-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div style="font-size:11px;color:var(--muted);margin-bottom:11px;line-height:1.7">
+    <strong>Required columns:</strong> Vendor, Category, Item Name<br>
+    <strong>Optional:</strong> Item Code, Weekly Average, Par, Unit, Price<br>
+    Par auto-calculated as 2× weekly avg if omitted. First row = headers.
+  </div>
+  <div class="fr"><label>Select CSV file</label><input type="file" id="csv-file" accept=".csv" style="height:auto;padding:8px"></div>
+  <div id="csv-preview" style="margin-top:9px;font-size:12px"></div>
+  <button class="btn btn-p btn-block" id="csv-do-btn" style="display:none;margin-top:10px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Import now</button>
+</div></div>
+
+<!-- ORDER HISTORY DETAIL MODAL -->
+<div class="ovl" id="hdetail-modal">
+<div class="modal">
+  <div class="mtop"><h2 id="hd-title">Order detail</h2><button class="btn btn-sm" data-close="hdetail-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div id="hd-body"></div>
+  <div class="tbar" style="margin-top:12px">
+    <button class="btn" id="hd-print"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2M9 21h6a1 1 0 0 0 1-1v-5H8v5a1 1 0 0 0 1 1zM17 7V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2"/></svg> Print</button>
+    <button class="btn btn-s" id="hd-xlsx"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Excel</button>
+  </div>
+  <button class="btn btn-w btn-block" id="hd-clone" style="margin-top:7px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg> Clone as new order</button>
+</div></div>
+
+<input type="file" id="json-file" accept=".json" style="display:none">
+
+<!-- SEASON MODAL -->
+<div class="ovl" id="szn-modal">
+<div class="modal">
+  <div class="mtop"><h2 id="szn-modal-title">Add season</h2><button class="btn btn-sm" data-close="szn-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="fr"><label>Season name</label><input type="text" id="f-szn-name" placeholder="e.g. Summer, Peak Season, Holiday"></div>
+  <div class="fc">
+    <div class="fr"><label>Start month</label>
+      <select id="f-szn-sm"><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6" selected>June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+    </div>
+    <div class="fr"><label>Start day</label><input type="number" id="f-szn-sd" min="1" max="31" value="1"></div>
+  </div>
+  <div class="fc">
+    <div class="fr"><label>End month</label>
+      <select id="f-szn-em"><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8" selected>August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+    </div>
+    <div class="fr"><label>End day</label><input type="number" id="f-szn-ed" min="1" max="31" value="31"></div>
+  </div>
+  <div class="fr"><label>Color</label>
+    <input type="hidden" id="f-szn-color" value="#f59e0b">
+    <div id="szn-colors" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:5px"></div>
+  </div>
+  <style>.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border .1s}.color-swatch.sel{border-color:var(--text);transform:scale(1.15)}</style>
+  <div class="fhint" style="margin-top:8px">Seasons can wrap across year end (e.g. Winter: Nov 1 – Feb 28). Any date not in a named season uses default multipliers (1.0).</div>
+  <div class="fc" style="margin-top:12px">
+    <button class="btn btn-d" id="del-szn-btn" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Delete</button>
+    <button class="btn btn-p btn-block" id="save-szn-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m4 14v-4h4v4M8 4v4h6V4"/></svg> Save season</button>
+  </div>
+</div></div>
+
+<div id="toast"></div>
+
+<script>
+/* ===== SEED ===== */
+const SEED = []
+;
+
+/* ===== CONSTANTS ===== */
+const SK = 'stn_v5';
+const DEFAULT_UNITS = ['bag','bottle','box','can','carton','case','drum','ea','gallon','kg','lb','liter','oz','pack','roll','sleeve'];
+const CRIT_RATIO = 0.25;
+
+/* ===== STATE ===== */
+let S = {
+  vendors:[], items:[], units:[...DEFAULT_UNITS],
+  orderHistory:[], storeName:'My Station',
+  ui:{screen:'home',cV:'',cG:'All',mV:'',mG:'All'}
+};
+
+
+/* ===== XLSX LAZY LOADER ===== */
+let _xlsxLoaded=false, _xlsxLoading=false, _xlsxCallbacks=[];
+function loadXLSX(cb){
+  if(_xlsxLoaded){ cb(); return; }
+  _xlsxCallbacks.push(cb);
+  if(_xlsxLoading) return;
+  _xlsxLoading=true;
+  const s=document.createElement('script');
+  s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+  s.onload=()=>{ _xlsxLoaded=true; _xlsxLoading=false; _xlsxCallbacks.forEach(f=>f()); _xlsxCallbacks=[]; };
+  s.onerror=()=>{ toast('Could not load Excel library. Check your internet connection.'); _xlsxLoading=false; _xlsxCallbacks=[]; };
+  document.head.appendChild(s);
+  toast('Loading Excel…',3000);
+}
+/* ===== SEASONS ===== */
+// seasons: [{id, name, startMonth(1-12), startDay, endMonth, endDay, color}]
+// seasonMultipliers: { [vendorName]: { [groupName]: { [seasonId]: multiplier } } }
+const DEFAULT_SEASONS = [
+  {id:'s_summer', name:'Summer',   startMonth:6,  startDay:1,  endMonth:8,  endDay:31,  color:'#f59e0b'},
+  {id:'s_winter', name:'Winter',   startMonth:11, startDay:1,  endMonth:2,  endDay:28,  color:'#3b82f6'},
+  {id:'s_spring', name:'Spring',   startMonth:3,  startDay:1,  endMonth:5,  endDay:31,  color:'#10b981'},
+  {id:'s_fall',   name:'Fall',     startMonth:9,  startDay:1,  endMonth:10, endDay:31,  color:'#8b5cf6'},
+];
+
+function dateInSeason(date, season){
+  const m=date.getMonth()+1, d=date.getDate();
+  const {startMonth:sm,startDay:sd,endMonth:em,endDay:ed}=season;
+  if(sm<=em){ return (m>sm||(m===sm&&d>=sd))&&(m<em||(m===em&&d<=ed)); }
+  else { return (m>sm||(m===sm&&d>=sd))||(m<em||(m===em&&d<=ed)); }
+}
+
+function currentSeason(date){
+  date=date||new Date();
+  if(!S.seasons||!S.seasons.length) return null;
+  return S.seasons.find(s=>dateInSeason(date,s))||null;
+}
+
+function seasonMultiplier(vendorName, groupName, date){
+  date=date||new Date();
+  const season=currentSeason(date);
+  if(!season) return 1;
+  return S.seasonMultipliers?.[vendorName]?.[groupName]?.[season.id]??1;
+}
+
+function calcParSeasonal(avg, parOv, vendorName, groupName, date){
+  const mult=seasonMultiplier(vendorName, groupName, date);
+  if(parOv!==null&&parOv!==undefined&&parOv!=='') return Math.round(Number(parOv)*mult)||0;
+  const r=2*(Number(avg)||0)*mult;
+  if(r<0.5) return 0;
+  return Math.round(r);
+}
+
+/* ===== STORAGE ===== */
+function loadState(){
+  try{
+    const r=localStorage.getItem(SK);
+    if(r){ const p=JSON.parse(r); Object.assign(S,p); S.ui=Object.assign({screen:'home',cV:'',cG:'All',mV:'',mG:'All'},p.ui||{}); if(!S.units||!S.units.length) S.units=[...DEFAULT_UNITS]; if(!S.orderHistory) S.orderHistory=[]; if(!S.seasons) S.seasons=[...DEFAULT_SEASONS]; if(!S.seasonMultipliers) S.seasonMultipliers={}; }
+    else seedData();
+  }catch(e){ seedData(); }
+  if(!S.vendors.find(v=>v.name===S.ui.cV)) S.ui.cV=S.vendors[0]?.name||'';
+}
+function persist(){ localStorage.setItem(SK,JSON.stringify(S)); }
+
+function seedData(){
+  // No seed data — fresh install starts empty with default seasons
+  S.vendors=[];
+  S.items=[];
+  S.ui.cV=''; S.ui.cG='All'; S.orderHistory=[]; S.seasons=[...DEFAULT_SEASONS]; S.seasonMultipliers={};
+}
+
+/* ===== CALC ===== */
+function uid(){ return 'x'+Math.random().toString(36).slice(2,9); }
+function gFor(vn){ return S.vendors.find(v=>v.name===vn)?.groups||[]; }
+function calcPar(avg,ov){
+  if(ov!==null&&ov!==undefined&&ov!=='') return Number(ov);
+  const r=2*(Number(avg)||0);
+  if(r<0.5) return 0;
+  return Math.round(r);
+}
+function oQty(item){
+  if(item.current===null||item.current===undefined||item.current==='') return 0;
+  const par=calcParSeasonal(item.avg,item.parOv,item.vendor,item.group);
+  const need=par-Number(item.current);
+  if(need<=0) return 0;
+  const m=Number(item.multiple)||1;
+  return Math.ceil(need/m)*m;
+}
+function effQty(item){ return (item.oOv!==undefined&&item.oOv!==null)?item.oOv:oQty(item); }
+function sFlag(item){
+  if(item.current===null||item.current===undefined||item.current==='') return null;
+  const par=calcParSeasonal(item.avg,item.parOv,item.vendor,item.group);
+  if(par<=0) return null;
+  const c=Number(item.current);
+  if(c<=par*CRIT_RATIO) return 'crit';
+  if(c<par) return 'low';
+  return 'ok';
+}
+function fnum(n){ if(n===null||n===undefined||n==='') return ''; const x=Number(n); return x%1===0?''+x:+(Math.round(x*100)/100)+''; }
+function fpar(it){ return fnum(calcParSeasonal(it.avg,it.parOv,it.vendor,it.group)); }
+function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function toast(msg,dur=2000){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),dur); }
+function cntOrder(){ return S.items.filter(i=>oQty(i)>0).length; }
+function cntCrit(){ return S.items.filter(i=>sFlag(i)==='crit').length; }
+function cntLow(){ return S.items.filter(i=>sFlag(i)==='low').length; }
+
+/* ===== RENDER ENGINE ===== */
+const mainEl=document.getElementById('main');
+const titleEl=document.getElementById('ptitle');
+const backBtn=document.getElementById('back-btn');
+const backLabel=document.getElementById('back-label');
+const hdrAct=document.getElementById('hdr-act');
+
+function render(){
+  document.querySelectorAll('.ni').forEach(n=>n.classList.toggle('active',n.dataset.s===topS()));
+  const ob=cntOrder(); const bdg=document.getElementById('onbdg');
+  ob>0?(bdg.style.display='flex',bdg.textContent=ob):bdg.style.display='none';
+  backBtn.style.visibility='hidden'; hdrAct.style.visibility='hidden';
+  hdrAct.innerHTML=''; hdrAct.onclick=null;
+  titleEl.style.display='none';
+  document.getElementById('hdr-brand').style.display='flex';
+  switch(S.ui.screen){
+    case 'home': rHome(); break;
+    case 'count': rCount(); break;
+    case 'order': rOrder(); break;
+    case 'order-v': rOrderV(); break;
+    case 'history': rHistory(); break;
+    case 'manage': rManage(); break;
+    case 'mv': rManageV(); break;
+    case 'mg': rManageG(); break;
+    case 'mi': rManageI(); break;
+    case 'ms': rManageSeasons(); break;
+    default: rHome();
+  }
+  persist();
+  if(!['count','order-v'].includes(S.ui.screen)) window.scrollTo(0,0);
+}
+function topS(){ if(S.ui.screen.startsWith('m')) return 'manage'; if(S.ui.screen.startsWith('order')) return 'order'; return S.ui.screen; }
+function go(s){ S.ui.screen=s; render(); }
+function showBack(dest,lbl,ttl){
+  backBtn.style.visibility='visible'; backLabel.textContent=lbl||'Back'; backBtn.onclick=()=>go(dest);
+  titleEl.textContent=ttl||lbl||''; titleEl.style.display='block';
+  document.getElementById('hdr-brand').style.display='none';
+}
+function setHdrAct(html,fn){ hdrAct.style.visibility='visible'; hdrAct.innerHTML=html; hdrAct.onclick=fn; }
+document.querySelectorAll('.ni').forEach(b=>b.addEventListener('click',()=>go(b.dataset.s)));
+
+/* ===== HOME ===== */
+function rHome(){
+  titleEl.textContent='Station Inventory';
+  const crit=cntCrit(),low=cntLow(),ord=cntOrder();
+  const counted=S.items.filter(i=>i.current!==null&&i.current!==undefined&&i.current!=='').length;
+  mainEl.innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:1px">
+      <div style="font-size:20px;font-weight:800">${esc(S.storeName)}</div>
+      <button id="edit-store-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:2px;font-size:16px;line-height:1" title="Edit store name"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:15px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px">${(()=>{const _s=currentSeason();return _s?`<div style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;margin-bottom:8px;background:${_s.color}22;color:${_s.color};border:1px solid ${_s.color}44"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:13px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg> ${_s.name} season — par levels adjusted</div>`:''})()}
+    ${S.items.length} items &middot; ${S.vendors.length} vendors &middot; ${counted} counted today</div>
+    <div class="sgrid">
+      <div class="sc crit"><div class="sn">${crit}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical</div></div>
+      <div class="sc low"><div class="sn">${low}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Low stock</div></div>
+      <div class="sc neutral"><div class="sn">${ord}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> To order</div></div>
+      <div class="sc ok"><div class="sn">${counted-crit-low>=0?counted-crit-low:0}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Well stocked</div></div>
+    </div>
+    <button class="cta primary" data-go="count"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4M9 17h.01"/></svg></div><div class="cbody"><div class="ctitle">Start inventory count</div><div class="csub">Enter current quantities by vendor &amp; group</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="cta secondary" data-go="order"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="cbody"><div class="ctitle">Review &amp; generate orders</div><div class="csub">${ord} item${ord===1?'':'s'} suggested across ${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length} vendor${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length===1?'':'s'}</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="cta secondary" data-go="history"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8v4l3 3M3.05 11a9 9 0 1 0 .5-3.5"/><path d="M3 4.5v4h4"/></svg></div><div class="cbody"><div class="ctitle">Order history</div><div class="csub">${S.orderHistory.length} order${S.orderHistory.length===1?'':'s'} saved &mdash; view, print, or clone</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
+    ${crit>0?`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--danger)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical — order immediately</div><div id="crit-list"></div>`:''}
+  `;
+  mainEl.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+  const editStoreBtn=document.getElementById('edit-store-btn');
+  if(editStoreBtn) editStoreBtn.onclick=()=>{ const n=prompt('Store / location name:',S.storeName); if(n?.trim()){ S.storeName=n.trim(); persist(); render(); } };
+  if(crit>0){
+    const cl=document.getElementById('crit-list');
+    S.items.filter(i=>sFlag(i)==='crit').sort((a,b)=>(Number(a.current||0)/Math.max(calcPar(a.avg,a.parOv),.001))-(Number(b.current||0)/Math.max(calcPar(b.avg,b.parOv),.001))).slice(0,6).forEach(item=>{
+      const d=document.createElement('div'); d.className='ic crit';
+      d.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:19px;color:var(--danger);flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg><div class="ii"><div class="iname">${esc(item.name)}</div><div class="imeta"><span class="chip crit">Critical</span>${esc(item.vendor)} &middot; Hand: ${fnum(item.current)} / Par: ${fpar(item)}</div></div>`;
+      cl.appendChild(d);
+    });
+  }
+}
+
+/* ===== COUNT ===== */
+function rCount(){
+  titleEl.textContent='Count inventory';
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Item',()=>openItemModal(null));
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>No vendors yet.<br>Go to Manage to set up vendors.</div>`; return; }
+  if(!S.ui.cV) S.ui.cV=S.vendors[0].name;
+  mainEl.innerHTML=`
+    <div class="search-bar" id="count-search-bar">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>
+      <input type="search" id="count-search-inp" placeholder="Search by name or item code…" autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="clr-btn" id="count-search-clr" title="Clear"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div id="count-search-results" style="display:none"></div>
+    <div id="count-normal">
+      <div class="vtabs" id="cvt"></div><div class="ctabs" id="cct"></div><div id="cit"></div>
+    </div>`;
+
+  // Search logic
+  const searchInp=document.getElementById('count-search-inp');
+  const searchBar=document.getElementById('count-search-bar');
+  const searchResults=document.getElementById('count-search-results');
+  const normalView=document.getElementById('count-normal');
+  const clrBtn=document.getElementById('count-search-clr');
+
+  function doCountSearch(q){
+    q=q.trim().toLowerCase();
+    clrBtn.style.display=q?'block':'none';
+    searchBar.classList.toggle('has-text',!!q);
+    if(!q){
+      searchResults.style.display='none';
+      normalView.style.display='block';
+      return;
+    }
+    searchResults.style.display='block';
+    normalView.style.display='none';
+    const matches=S.items.filter(i=>
+      i.name.toLowerCase().includes(q)||
+      (i.sku&&i.sku.toLowerCase().includes(q))
+    ).sort((a,b)=>{
+      // exact SKU match first, then name starts-with, then contains
+      const aSkuExact=a.sku&&a.sku.toLowerCase()===q;
+      const bSkuExact=b.sku&&b.sku.toLowerCase()===q;
+      if(aSkuExact&&!bSkuExact) return -1;
+      if(bSkuExact&&!aSkuExact) return 1;
+      const aStarts=a.name.toLowerCase().startsWith(q);
+      const bStarts=b.name.toLowerCase().startsWith(q);
+      if(aStarts&&!bStarts) return -1;
+      if(bStarts&&!aStarts) return 1;
+      return a.name.localeCompare(b.name);
+    });
+    if(!matches.length){
+      searchResults.innerHTML=`<div class="no-results"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>No items match "<strong>${esc(q)}</strong>"</div>`;
+      return;
+    }
+    searchResults.innerHTML='';
+    const countHdr=document.createElement('div');
+    countHdr.className='sh';
+    countHdr.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>${matches.length} result${matches.length===1?'':'s'} for "${esc(q)}"`;
+    searchResults.appendChild(countHdr);
+    matches.forEach(item=>{
+      const card=mkCountCard(item);
+      // add vendor/group context line to meta
+      const meta=card.querySelector('.imeta');
+      if(meta){
+        const ctx=document.createElement('span');
+        ctx.style.cssText='font-size:9px;color:var(--muted);background:var(--bg);padding:1px 5px;border-radius:4px';
+        ctx.textContent=item.vendor+' › '+item.group;
+        meta.prepend(ctx);
+      }
+      searchResults.appendChild(card);
+    });
+  }
+
+  searchInp.addEventListener('input',()=>doCountSearch(searchInp.value));
+  clrBtn.addEventListener('click',()=>{ searchInp.value=''; doCountSearch(''); searchInp.focus(); });
+  const vt=document.getElementById('cvt');
+  S.vendors.forEach(v=>{
+    const fl=S.items.filter(i=>i.vendor===v.name&&sFlag(i)).length;
+    const t=document.createElement('div'); t.className='vtab'+(v.name===S.ui.cV?' active':'');
+    t.innerHTML=esc(v.name)+(fl?`<span class="nb">${fl}</span>`:'');
+    t.onclick=()=>{S.ui.cV=v.name;S.ui.cG='All';render();};
+    vt.appendChild(t);
+  });
+  const ct=document.getElementById('cct');
+  const af=S.items.filter(i=>i.vendor===S.ui.cV&&sFlag(i)).length;
+  const at=document.createElement('div'); at.className='ctab'+(S.ui.cG==='All'?' active':'');
+  at.innerHTML='All'+(af?`<span class="nb">${af}</span>`:'');
+  at.onclick=()=>{S.ui.cG='All';render();}; ct.appendChild(at);
+  gFor(S.ui.cV).forEach(g=>{
+    const cnt=S.items.filter(i=>i.vendor===S.ui.cV&&i.group===g&&sFlag(i)).length;
+    const t=document.createElement('div'); t.className='ctab'+(g===S.ui.cG?' active':'');
+    t.innerHTML=esc(g)+(cnt?`<span class="nb">${cnt}</span>`:'');
+    t.onclick=()=>{S.ui.cG=g;render();}; ct.appendChild(t);
+  });
+  const ie=document.getElementById('cit');
+  let items=S.items.filter(i=>i.vendor===S.ui.cV);
+  if(S.ui.cG!=='All') items=items.filter(i=>i.group===S.ui.cG);
+  if(!items.length){ ie.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>No items here yet.</div>`; return; }
+  if(S.ui.cG==='All'){
+    const bg={};
+    items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+    Object.keys(bg).sort().forEach(g=>{ const h=document.createElement('div'); h.className='sh'; h.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}`; ie.appendChild(h); bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>ie.appendChild(mkCountCard(item))); });
+  } else { items.sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>ie.appendChild(mkCountCard(item))); }
+}
+
+function mkCountCard(item){
+  const fl=sFlag(item);
+  const card=document.createElement('div'); card.className='ic'+(fl?' '+fl:'');
+  const chips={'crit':'<span class="chip crit"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical</span>','low':'<span class="chip low"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Low</span>','ok':'<span class="chip ok"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5L20 7"/></svg> OK</span>'};
+
+  const info=document.createElement('div'); info.className='ii';
+  info.style.cursor='pointer'; info.onclick=()=>openItemModal(item.id);
+  const iname=document.createElement('div'); iname.className='iname'; iname.textContent=item.name;
+  const imeta=document.createElement('div'); imeta.className='imeta';
+  const _mult=seasonMultiplier(item.vendor,item.group);
+  const _szn=currentSeason();
+  const _sznBadge=_mult!==1&&_szn?`<span class="season-badge" style="background:${_szn.color}22;color:${_szn.color};border:1px solid ${_szn.color}55">&#9733; ${_szn.name} &times;${_mult.toFixed(2)}</span>`:'';
+  imeta.innerHTML=(fl?chips[fl]||'':'')+`<span>Par ${fpar(item)} ${esc(item.unit||'')} · Avg/wk ${fnum(item.avg)}</span>`+_sznBadge;
+  info.appendChild(iname); info.appendChild(imeta);
+
+  // Live order hint pill — updates without full re-render
+  const hint=document.createElement('div');
+  hint.className='order-hint';
+  function refreshHint(curr){
+    const par=calcParSeasonal(item.avg,item.parOv,item.vendor,item.group);
+    if(curr===null||curr===undefined||curr===''){hint.textContent='';hint.className='order-hint';return;}
+    const c=Number(curr);
+    const need=par-c;
+    const mult=Number(item.multiple)||1;
+    const ord=need>0?Math.ceil(need/mult)*mult:0;
+    if(ord>0){
+      const isCrit=c<=par*CRIT_RATIO;
+      hint.className='order-hint has-order'+(isCrit?' crit':'');
+      hint.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 19V5M5 12l7-7 7 7"/></svg> Order ${fnum(ord)}<span class="hint-unit">${esc(item.unit||'')}</span>`;
+    } else {
+      hint.className='order-hint is-ok';
+      hint.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> OK`;
+    }
+  }
+  refreshHint(item.current);
+
+  const up=document.createElement('button'); up.className='sbtn'; up.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg>';
+  const dn=document.createElement('button'); dn.className='sbtn'; dn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12h14"/></svg>';
+  const qi=document.createElement('input'); qi.type='number'; qi.className='qi'; qi.inputMode='decimal'; qi.min='0'; qi.step='1';
+  qi.value=(item.current===null||item.current===undefined||item.current==='')?'':item.current;
+  qi.placeholder='—';
+
+  function updateCurrent(val){
+    item.current=val===''?null:parseFloat(val)||0;
+    // update flag class on card without full re-render
+    const newFl=sFlag(item);
+    card.className='ic'+(newFl?' '+newFl:'');
+    imeta.innerHTML=(newFl?chips[newFl]||'':'')+`<span>Par ${fpar(item)} ${esc(item.unit||'')} · Avg/wk ${fnum(item.avg)}</span>`;
+    refreshHint(item.current);
+    // debounced badge update
+    clearTimeout(card._rt); card._rt=setTimeout(()=>{ document.querySelectorAll('.vtab,.ctab,.ni').forEach(el=>el._needsUpdate=true); updateNavBadges(); },300);
+  }
+
+  qi.addEventListener('input',()=>updateCurrent(qi.value));
+  qi.addEventListener('change',()=>{ item.current=qi.value===''?null:parseFloat(qi.value)||0; persist(); });
+  qi.addEventListener('focus',()=>qi.select());
+
+  up.onclick=()=>{ const v=(Number(item.current)||0)+1; item.current=v; qi.value=v; updateCurrent(String(v)); persist(); };
+  dn.onclick=()=>{ const v=Math.max(0,(Number(item.current)||0)-1); item.current=v; qi.value=v; updateCurrent(String(v)); persist(); };
+
+  const sbtns=document.createElement('div'); sbtns.className='sbtns'; sbtns.appendChild(up); sbtns.appendChild(dn);
+  const qw=document.createElement('div'); qw.className='qw'; qw.appendChild(qi); qw.appendChild(sbtns);
+  card.appendChild(info); card.appendChild(hint); card.appendChild(qw);
+  return card;
+}
+
+function updateNavBadges(){
+  const ob=cntOrder(); const bdg=document.getElementById('onbdg');
+  ob>0?(bdg.style.display='flex',bdg.textContent=ob):bdg.style.display='none';
+  // update vendor tab badges if visible
+  document.querySelectorAll('#cvt .vtab').forEach(t=>{
+    const vname=t.textContent.replace(/\d+/,'').trim();
+    const v=S.vendors.find(x=>x.name===vname);
+    if(!v) return;
+    const fl=S.items.filter(i=>i.vendor===v.name&&sFlag(i)).length;
+    const existing=t.querySelector('.nb');
+    if(fl>0){ if(existing) existing.textContent=fl; else t.innerHTML=esc(v.name)+`<span class="nb">${fl}</span>`; }
+    else { if(existing) existing.remove(); }
+  });
+}
+
+/* ===== ORDER ===== */
+function rOrder(){
+  titleEl.textContent='Review & order';
+  mainEl.innerHTML=`
+    <div class="add-to-order-panel">
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg> Search &amp; add items to order</div>
+      <div class="search-bar" id="ord-search-bar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>
+        <input type="search" id="ord-search-inp" placeholder="Search by name or item code…" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="clr-btn" id="ord-search-clr"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div id="ord-search-results"></div>
+      <div class="fhint" style="margin-top:5px">Search any item and set a quantity directly — added items appear in the vendor order below.</div>
+    </div>
+    <div id="ord-vendor-section"></div>
+  `;
+
+  const ordInp=document.getElementById('ord-search-inp');
+  const ordResults=document.getElementById('ord-search-results');
+  const ordClr=document.getElementById('ord-search-clr');
+  const ordBar=document.getElementById('ord-search-bar');
+
+  buildOrderVendorSection(); // always build vendor section first
+
+  function doOrdSearch(q){
+    q=q.trim().toLowerCase();
+    ordBar.classList.toggle('has-text',!!q);
+    ordClr.style.display=q?'block':'none';
+    if(!q){ ordResults.innerHTML=''; return; }
+
+    const matches=S.items.filter(i=>
+      i.name.toLowerCase().includes(q)||(i.sku&&i.sku.toLowerCase().includes(q))
+    ).sort((a,b)=>{
+      const aE=a.sku&&a.sku.toLowerCase()===q, bE=b.sku&&b.sku.toLowerCase()===q;
+      if(aE&&!bE) return -1; if(bE&&!aE) return 1;
+      const aS=a.name.toLowerCase().startsWith(q), bS=b.name.toLowerCase().startsWith(q);
+      if(aS&&!bS) return -1; if(bS&&!aS) return 1;
+      return a.name.localeCompare(b.name);
+    }).slice(0,25);
+
+    if(!matches.length){
+      ordResults.innerHTML=`<div class="no-results" style="padding:12px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>No items match "<strong>${esc(q)}</strong>"</div>`;
+      return;
+    }
+
+    ordResults.innerHTML='';
+    const list=document.createElement('div'); list.className='search-results-list';
+    matches.forEach(item=>list.appendChild(makeSearchRow(item)));
+    ordResults.appendChild(list);
+  }
+
+  function makeSearchRow(item){
+    const alreadyAdded=(item.oOv!==undefined&&item.oOv!==null)||oQty(item)>0;
+    const suggestedQty=item.oOv!==undefined&&item.oOv!==null ? item.oOv :
+                       oQty(item)>0 ? oQty(item) :
+                       calcParSeasonal(item.avg,item.parOv,item.vendor,item.group)||1;
+    const par=calcParSeasonal(item.avg,item.parOv,item.vendor,item.group);
+
+    const row=document.createElement('div');
+    row.className='sr-item';
+    row.dataset.id=item.id;
+
+    // Default state: info + add button
+    function renderDefault(){
+      row.innerHTML=`
+        <div class="sri-info">
+          <div class="sri-name">${esc(item.name)}</div>
+          <div class="sri-meta">${item.sku?`[${esc(item.sku)}] &middot; `:''}${esc(item.vendor)} &rsaquo; ${esc(item.group)} &middot; Par ${par||'—'} ${esc(item.unit||'')}</div>
+        </div>
+        <button class="sri-add${alreadyAdded?' sri-added':''}" title="${alreadyAdded?'Already in order — tap to change qty':'Add to order'}">
+          ${alreadyAdded?'<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5L20 7"/></svg>':'<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg>'}
+        </button>`;
+      row.querySelector('.sri-add').onclick=()=>renderQtyExpanded();
+    }
+
+    // Expanded state: inline qty input + confirm
+    function renderQtyExpanded(){
+      row.innerHTML=`
+        <div class="sri-info" style="min-width:0">
+          <div class="sri-name" style="font-size:12px">${esc(item.name)}</div>
+          <div class="sri-meta">${esc(item.vendor)} &rsaquo; ${esc(item.group)}</div>
+        </div>
+        <div class="sri-qty-row">
+          <input type="number" class="sri-qty-inp" value="${suggestedQty}" min="0" step="${item.multiple||1}" inputmode="decimal">
+          <span class="sri-unit">${esc(item.unit||'')}</span>
+          <button class="sri-confirm"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5L20 7"/></svg></button>
+          <button class="sri-cancel"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+        </div>`;
+      const inp=row.querySelector('.sri-qty-inp');
+      inp.focus(); inp.select();
+      row.querySelector('.sri-confirm').onclick=()=>{
+        const qty=parseFloat(inp.value)||0;
+        if(qty<=0){ inp.style.borderColor='var(--danger)'; return; }
+        item.oOv=qty;
+        persist();
+        renderDefault();
+        buildOrderVendorSection(); // refresh vendor cards live
+        toast((item.name.length>28?item.name.slice(0,28)+'…':item.name)+' added — '+qty+' '+( item.unit||''));
+      };
+      row.querySelector('.sri-cancel').onclick=()=>renderDefault();
+      inp.addEventListener('keydown',e=>{
+        if(e.key==='Enter') row.querySelector('.sri-confirm').click();
+        if(e.key==='Escape') row.querySelector('.sri-cancel').click();
+      });
+    }
+
+    renderDefault();
+    return row;
+  }
+
+  ordInp.addEventListener('input',()=>doOrdSearch(ordInp.value));
+  ordClr.addEventListener('click',()=>{ ordInp.value=''; doOrdSearch(''); ordInp.focus(); });
+}
+  buildOrderVendorSection();
+}
+
+function buildVendorCards(){
+  // legacy alias
+  buildOrderVendorSection();
+}
+
+function buildOrderVendorSection(){
+  const sec=document.getElementById('ord-vendor-section');
+  if(!sec) return;
+  sec.innerHTML='';
+
+  const vendorsWithOrders=S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0));
+
+  if(!vendorsWithOrders.length){
+    sec.innerHTML=`<div style="text-align:center;color:var(--muted);padding:18px 16px;font-size:13px;border:1.5px dashed var(--border);border-radius:var(--rad)">
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:28px;display:block;margin-bottom:8px;color:var(--border)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4M9 17h.01"/></svg>
+      <strong>No orders yet</strong><br>
+      <span style="font-size:11px">Search for items above to add them,<br>or count inventory in the Count tab to get auto-suggestions.</span>
+    </div>`;
+    return;
+  }
+
+  const hdr=document.createElement('div'); hdr.className='sh';
+  hdr.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg> Current orders — tap to review &amp; generate`;
+  sec.appendChild(hdr);
+
+  vendorsWithOrders.forEach(v=>{
+    const items=S.items.filter(i=>i.vendor===v.name&&oQty(i)>0);
+    const crit=items.filter(i=>sFlag(i)==='crit').length;
+    const manualCount=items.filter(i=>i.oOv!==undefined&&i.oOv!==null&&!(i.current!==null&&i.current!==undefined&&i.current!=='')).length;
+
+    const card=document.createElement('div'); card.className='voc';
+    card.innerHTML=`
+      <div class="vico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></div>
+      <div class="vbody">
+        <div class="vtitle">${esc(v.name)}</div>
+        <div class="vmeta">
+          ${items.length} item${items.length===1?'':'s'} to order
+          ${crit?` &middot; <strong style="color:var(--danger)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:10px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> ${crit} critical</strong>`:''}
+          ${manualCount?` &middot; <span style="color:var(--accent)">${manualCount} manually added</span>`:''}
+        </div>
+      </div>
+      <div class="vbdg"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg> ${items.length}</div>`;
+    card.onclick=()=>{S.ui.cV=v.name;go('order-v');};
+    sec.appendChild(card);
+  });
+}
+
+function rOrderV(){
+  showBack('order',S.ui.cV,S.ui.cV);
+  const items=S.items.filter(i=>i.vendor===S.ui.cV&&oQty(i)>0);
+  if(!items.length){ go('order'); return; }
+  const bg={};
+  items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  let html=`<div style="font-size:11px;color:var(--muted);margin-bottom:13px;line-height:1.6">Adjust quantities if needed, then tap Generate to save &amp; share this order.</div>`;
+  Object.keys(bg).sort().forEach(g=>{
+    html+=`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}</div>`;
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>{
+      const fl=sFlag(item);
+      html+=`<div class="oc${fl==='crit'?' crit':''}">
+        <div class="ii"><div class="iname">${esc(item.name)}</div>
+        <div class="imeta">${fl==='crit'?'<span class="chip crit"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical</span>':''}<span>On hand ${fnum(item.current)} &middot; Par ${fpar(item)} ${esc(item.unit||'')}</span>${(()=>{const _m=seasonMultiplier(item.vendor,item.group);const _s=currentSeason();return _m!==1&&_s?`<span class="season-badge" style="background:${_s.color}22;color:${_s.color};border:1px solid ${_s.color}55">\u2605 ${_s.name} \xd7${_m.toFixed(2)}</span>`:''})()}</div></div>
+        <div><input type="number" class="oqi" min="0" step="${item.multiple||1}" value="${fnum(item.oOv!==undefined&&item.oOv!==null?item.oOv:oQty(item))}" data-id="${item.id}">
+        <div class="ounit">${esc(item.unit||'')}</div></div></div>`;
+    });
+  });
+  html+=`<button class="btn btn-p btn-block btn-lg" id="gen-btn" style="margin-top:16px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Generate order — ${items.length} item${items.length===1?'':'s'}</button>`;
+  mainEl.innerHTML=html;
+  mainEl.querySelectorAll('.oqi').forEach(inp=>{
+    inp.addEventListener('change',()=>{ const it=S.items.find(i=>i.id===inp.dataset.id); if(it){ it.oOv=parseFloat(inp.value)||0; persist(); } });
+    inp.addEventListener('focus',()=>inp.select());
+  });
+  document.getElementById('gen-btn').onclick=()=>openOrderModal(S.ui.cV);
+}
+
+/* ===== ORDER MODAL ===== */
+let _curVendor=null, _curOrderItems=null;
+
+function buildOrderTxt(vname,items){
+  const d=new Date().toLocaleDateString();
+  let t=`ORDER: ${S.storeName}\nVendor: ${vname}\nDate: ${d}\n${'─'.repeat(38)}\n\n`;
+  const bg={};
+  items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  Object.keys(bg).sort().forEach(g=>{
+    t+=`${g}:\n`;
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ t+=`  ${i.name}${i.sku?` [${i.sku}]`:''}: ${fnum(effQty(i))} ${i.unit||''}\n`; });
+    t+='\n';
+  });
+  t+=`${'─'.repeat(38)}\nTotal items: ${items.length}`;
+  return t;
+}
+
+function openOrderModal(vname){
+  _curVendor=vname;
+  _curOrderItems=S.items.filter(i=>i.vendor===vname&&effQty(i)>0);
+  const bg={};
+  _curOrderItems.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  const d=new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  let body=`<div class="fr"><label>Store name</label><input type="text" id="ord-store" value="${esc(S.storeName)}"></div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:11px">Vendor: <strong>${esc(vname)}</strong> &middot; ${d}</div>`;
+  Object.keys(bg).sort().forEach(g=>{
+    body+=`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}</div>`;
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ body+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span>${esc(i.name)}</span><span style="font-weight:700;color:var(--accent)">${fnum(effQty(i))} ${esc(i.unit||'')}</span></div>`; });
+  });
+  document.getElementById('om-body').innerHTML=body;
+  document.getElementById('om-title').textContent=`Order — ${vname}`;
+  document.getElementById('om-txt').value=buildOrderTxt(vname,_curOrderItems);
+  document.getElementById('ord-store')?.addEventListener('change',e=>{ S.storeName=e.target.value; persist(); document.getElementById('om-txt').value=buildOrderTxt(vname,_curOrderItems); });
+  document.getElementById('order-modal').classList.add('open');
+}
+
+document.getElementById('om-copy').onclick=()=>{
+  const ta=document.getElementById('om-txt'); ta.select(); ta.setSelectionRange(0,99999);
+  try{ navigator.clipboard?.writeText(ta.value).then(()=>toast('Copied!')).catch(()=>{ document.execCommand('copy'); toast('Copied!'); }); }
+  catch(e){ document.execCommand('copy'); toast('Copied!'); }
+};
+document.getElementById('om-print').onclick=()=>printOrder(_curVendor,_curOrderItems);
+document.getElementById('om-xlsx').onclick=()=>exportOrderXLSX(_curVendor,_curOrderItems);
+document.getElementById('om-email').onclick=()=>{
+  const d=new Date().toLocaleDateString(), subj=encodeURIComponent(`Order - ${S.storeName} - ${_curVendor} - ${d}`);
+  const body=document.getElementById('om-txt').value, enc=encodeURIComponent(body);
+  if(enc.length>1800){ toast('Long order — text copied. Paste into email.'); try{ navigator.clipboard?.writeText(body); }catch(e){} window.location.href=`mailto:?subject=${subj}`; return; }
+  window.location.href=`mailto:?subject=${subj}&body=${enc}`;
+};
+document.getElementById('om-confirm').onclick=()=>{
+  if(!_curVendor||!_curOrderItems) return;
+  const order={
+    id:uid(), vendor:_curVendor, date:new Date().toISOString(),
+    storeName:S.storeName,
+    items:_curOrderItems.map(i=>({id:i.id,name:i.name,group:i.group,sku:i.sku||'',unit:i.unit||'',qty:effQty(i),price:i.price||null}))
+  };
+  S.orderHistory.unshift(order);
+  persist(); closeModal('order-modal'); toast('Order saved to history ✓',2500);
+  // clear overrides for this vendor
+  S.items.filter(i=>i.vendor===_curVendor).forEach(i=>{ delete i.oOv; });
+  go('history');
+};
+
+/* ===== ORDER PRINT / XLSX ===== */
+function printOrder(vname,items){
+  const d=new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const bg={};
+  items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  let rows='';
+  Object.keys(bg).sort().forEach(g=>{
+    rows+=`<tr><td colspan="4" style="background:#f0f0f0;font-weight:700;padding:7px 8px;font-size:13px">${g}</td></tr>`;
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ rows+=`<tr><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:12px">${i.sku||''}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:12px">${i.name}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:center;font-size:12px">${i.unit||''}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:right;font-weight:700;font-size:13px">${fnum(effQty?effQty(i):i.qty)}</td></tr>`; });
+  });
+  const w=window.open('','_blank');
+  if(!w){ toast('Allow pop-ups to print'); return; }
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Order</title><style>body{font-family:Arial,sans-serif;padding:22px;color:#111}h1{font-size:19px;margin-bottom:3px}.meta{color:#666;font-size:12px;margin-bottom:10px}table{width:100%;border-collapse:collapse}th{text-align:left;padding:5px 8px;border-bottom:2px solid #c8102e;font-size:12px}.brand-hdr{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:2px solid #c8102e}.brand-hdr img{height:36px}.brand-title{font-size:22px;font-weight:800;color:#1a1a2e}.footer{margin-top:20px;font-size:10px;color:#999;border-top:1px solid #eee;padding-top:8px}</style></head><body><div class="brand-hdr"><img src="https://www.jandupetroleum.com/_next/image?url=%2Flogo%2Flogo.png&w=384&q=75" onerror="this.style.display='none'"><div><div class="brand-title">Jandu Petroleum</div><div style="font-size:12px;color:#666">${S.storeName||vname}</div></div></div><div class="meta">Vendor: <strong>${vname}</strong> &middot; ${d} &middot; ${items.length} items</div><table><thead><tr><th>SKU</th><th>Item</th><th style="text-align:center">Unit</th><th style="text-align:right">Qty</th></tr></thead><tbody>${rows}</tbody></table><div class="footer">Jandu Petroleum &mdash; Internal Inventory Order &mdash; Generated ${d}</div></body></html>`);
+  w.document.close(); w.onload=()=>{w.focus();w.print();}; setTimeout(()=>{ try{w.focus();w.print();}catch(e){} },400);
+}
+
+function exportOrderXLSX(vname, items){ loadXLSX(()=>_doExportOrderXLSX(vname,items)); }
+function _doExportOrderXLSX(vname, items){
+  const wb = XLSX.utils.book_new();
+  const bg={};
+  items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  // Summary sheet
+  const summRows=[['Station Order',''],['Vendor',vname],['Date',new Date().toLocaleDateString()],['Store',S.storeName],['Total Items',items.length],['','']];
+  summRows.push(['Group','Item','SKU','Unit','Qty','Price','Total']);
+  let grandTotal=0;
+  Object.keys(bg).sort().forEach(g=>{
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{
+      const q=effQty?effQty(i):i.qty, p=i.price||null, tot=p?q*p:null;
+      if(tot) grandTotal+=tot;
+      summRows.push([g,i.name,i.sku||'',i.unit||'',q,p||'',tot?tot.toFixed(2):'']);
+    });
+  });
+  if(grandTotal>0) summRows.push(['','','','','','Total Est.',grandTotal.toFixed(2)]);
+  const ws=XLSX.utils.aoa_to_sheet(summRows);
+  ws['!cols']=[{wch:20},{wch:36},{wch:14},{wch:8},{wch:7},{wch:9},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws,'Order');
+  // Per-group sheets
+  Object.keys(bg).sort().forEach(g=>{
+    const gRows=[['Item','SKU','Unit','Order Qty','Price','Est. Total']];
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{
+      const q=effQty?effQty(i):i.qty, p=i.price||null;
+      gRows.push([i.name,i.sku||'',i.unit||'',q,p||'',p?+(q*p).toFixed(2):'']);
+    });
+    const gs=XLSX.utils.aoa_to_sheet(gRows);
+    gs['!cols']=[{wch:36},{wch:14},{wch:8},{wch:9},{wch:9},{wch:11}];
+    const sheetName=g.replace(/[:\\\/\?\*\[\]]/g,'').slice(0,31);
+    XLSX.utils.book_append_sheet(wb,gs,sheetName);
+  });
+  XLSX.writeFile(wb,`Order_${vname.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('Excel file downloaded');
+}
+
+/* ===== ORDER HISTORY ===== */
+let _histView=null;
+
+function rHistory(){
+  titleEl.textContent='Order history';
+  if(!S.orderHistory.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8v4l3 3M3.05 11a9 9 0 1 0 .5-3.5"/><path d="M3 4.5v4h4"/></svg>No orders saved yet.<br>Generate and confirm an order from the Order tab to record it here.</div>`; return; }
+  const vendors=[...new Set(S.orderHistory.map(o=>o.vendor))].sort();
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Export all',()=>exportAllHistoryXLSX());
+  let html=`<div class="frow" id="h-filters">
+    <select id="h-vendor-filter"><option value="">All vendors</option>${vendors.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}</select>
+    <input type="date" id="h-from" title="From date">
+    <input type="date" id="h-to" title="To date">
+  </div><div id="hlist"></div>`;
+  mainEl.innerHTML=html;
+  function applyFilters(){
+    const vf=document.getElementById('h-vendor-filter').value;
+    const from=document.getElementById('h-from').value;
+    const to=document.getElementById('h-to').value;
+    let orders=S.orderHistory;
+    if(vf) orders=orders.filter(o=>o.vendor===vf);
+    if(from) orders=orders.filter(o=>o.date>=from);
+    if(to) orders=orders.filter(o=>o.date<=to+'T23:59:59');
+    renderHistList(orders);
+  }
+  ['h-vendor-filter','h-from','h-to'].forEach(id=>document.getElementById(id).addEventListener('change',applyFilters));
+  renderHistList(S.orderHistory);
+}
+
+function renderHistList(orders){
+  const el=document.getElementById('hlist');
+  if(!orders.length){ el.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>No orders match these filters.</div>`; return; }
+  el.innerHTML='';
+  orders.forEach(order=>{
+    const d=new Date(order.date);
+    const dStr=d.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+    const tStr=d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    const totalQty=order.items.reduce((s,i)=>s+(Number(i.qty)||0),0);
+    const totalCost=order.items.reduce((s,i)=>s+(i.price?(Number(i.qty)||0)*i.price:0),0);
+    const card=document.createElement('div'); card.className='hcard';
+    card.innerHTML=`<div class="hcard-top"><div class="hcard-vendor"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:14px;color:var(--accent)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg> ${esc(order.vendor)}</div><div class="hcard-date">${dStr} &middot; ${tStr}</div></div>
+      <div class="hcard-meta">${order.items.length} items &middot; ${fnum(totalQty)} units${totalCost>0?` &middot; Est. $${totalCost.toFixed(2)}`:''}</div>
+      <div class="hcard-acts">
+        <button class="btn" data-view="${order.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2"/><path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/></svg> View</button>
+        <button class="btn btn-w" data-clone="${order.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg> Clone</button>
+        <button class="btn btn-d btn-sm" data-del="${order.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button>
+      </div>`;
+    card.querySelector('[data-view]').onclick=()=>openHistDetail(order.id);
+    card.querySelector('[data-clone]').onclick=()=>cloneOrder(order.id);
+    card.querySelector('[data-del]').onclick=()=>{ if(!confirm('Delete this order from history?')) return; S.orderHistory=S.orderHistory.filter(o=>o.id!==order.id); persist(); rHistory(); toast('Deleted'); };
+    el.appendChild(card);
+  });
+}
+
+function openHistDetail(orderId){
+  const order=S.orderHistory.find(o=>o.id===orderId);
+  if(!order) return;
+  _histView=order;
+  const d=new Date(order.date).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const bg={};
+  order.items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  let body=`<div style="font-size:11px;color:var(--muted);margin-bottom:11px">Vendor: <strong>${esc(order.vendor)}</strong> &middot; ${d} &middot; ${order.items.length} items</div>`;
+  let grandTot=0;
+  Object.keys(bg).sort().forEach(g=>{
+    body+=`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}</div>`;
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{
+      const tot=i.price?(Number(i.qty)*i.price):null; if(tot) grandTot+=tot;
+      body+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(i.name)}</span><span style="white-space:nowrap;font-weight:700;color:var(--accent)">${fnum(i.qty)} ${esc(i.unit||'')}${tot?` <span style="color:var(--muted);font-weight:400">($${tot.toFixed(2)})</span>`:''}</span></div>`;
+    });
+  });
+  if(grandTot>0) body+=`<div style="text-align:right;margin-top:10px;font-weight:700;font-size:13px">Est. total: $${grandTot.toFixed(2)}</div>`;
+  document.getElementById('hd-title').textContent=`${order.vendor} — ${new Date(order.date).toLocaleDateString()}`;
+  document.getElementById('hd-body').innerHTML=body;
+  document.getElementById('hdetail-modal').classList.add('open');
+}
+
+document.getElementById('hd-print').onclick=()=>{ if(_histView) printHistOrder(_histView); };
+document.getElementById('hd-xlsx').onclick=()=>{ if(_histView) exportHistOrderXLSX(_histView); };
+document.getElementById('hd-clone').onclick=()=>{ if(_histView){ cloneOrder(_histView.id); closeModal('hdetail-modal'); } };
+
+function printHistOrder(order){
+  const d=new Date(order.date).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const bg={};
+  order.items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  let rows='';
+  Object.keys(bg).sort().forEach(g=>{
+    rows+=`<tr><td colspan="4" style="background:#f0f0f0;font-weight:700;padding:7px 8px">${g}</td></tr>`;
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ rows+=`<tr><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:12px">${i.sku||''}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;font-size:12px">${i.name}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:center;font-size:12px">${i.unit||''}</td><td style="padding:5px 8px;border-bottom:1px solid #eee;text-align:right;font-weight:700">${fnum(i.qty)}</td></tr>`; });
+  });
+  const w=window.open('','_blank'); if(!w){ toast('Allow pop-ups to print'); return; }
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Order</title><style>body{font-family:Arial,sans-serif;padding:22px;color:#111}h1{font-size:19px;margin-bottom:3px}.meta{color:#666;font-size:12px;margin-bottom:14px}table{width:100%;border-collapse:collapse}th{text-align:left;padding:5px 8px;border-bottom:2px solid #333;font-size:12px}</style></head><body><h1>${order.storeName||order.vendor}</h1><div class="meta">Vendor: <strong>${order.vendor}</strong> &middot; ${d} &middot; ${order.items.length} items</div><table><thead><tr><th>SKU</th><th>Item</th><th style="text-align:center">Unit</th><th style="text-align:right">Qty</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+  w.document.close(); w.onload=()=>{w.focus();w.print();}; setTimeout(()=>{ try{w.focus();w.print();}catch(e){} },400);
+}
+
+function exportHistOrderXLSX(order){ loadXLSX(()=>_doExportHistOrderXLSX(order)); }
+function _doExportHistOrderXLSX(order){
+  const items=order.items;
+  const wb=XLSX.utils.book_new();
+  const bg={};
+  items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  const rows=[['Station Order',''],['Vendor',order.vendor],['Date',new Date(order.date).toLocaleDateString()],['Store',order.storeName||''],['',''],['Group','Item','SKU','Unit','Qty','Price','Est. Total']];
+  let gt=0;
+  Object.keys(bg).sort().forEach(g=>{ bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ const tot=i.price?Number(i.qty)*i.price:null; if(tot) gt+=tot; rows.push([g,i.name,i.sku||'',i.unit||'',i.qty,i.price||'',tot?+tot.toFixed(2):'']); }); });
+  if(gt>0) rows.push(['','','','','','Total',+gt.toFixed(2)]);
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:20},{wch:36},{wch:14},{wch:8},{wch:7},{wch:9},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws,'Order');
+  XLSX.writeFile(wb,`Order_${order.vendor.replace(/\s+/g,'_')}_${order.date.slice(0,10)}.xlsx`);
+  toast('Excel downloaded');
+}
+
+function exportAllHistoryXLSX(){ loadXLSX(()=>_doExportAllHistoryXLSX()); }
+function _doExportAllHistoryXLSX(){
+  if(!S.orderHistory.length){ toast('No order history to export'); return; }
+  const wb=XLSX.utils.book_new();
+  // Summary sheet - all orders
+  const summRows=[['Date','Vendor','Store','Items','Total Qty','Est. Total ($)']];
+  S.orderHistory.forEach(o=>{
+    const tq=o.items.reduce((s,i)=>s+(Number(i.qty)||0),0);
+    const tc=o.items.reduce((s,i)=>s+(i.price?(Number(i.qty)||0)*i.price:0),0);
+    summRows.push([new Date(o.date).toLocaleDateString(),o.vendor,o.storeName||'',o.items.length,tq,tc>0?+tc.toFixed(2):'']);
+  });
+  const ws=XLSX.utils.aoa_to_sheet(summRows);
+  ws['!cols']=[{wch:14},{wch:22},{wch:18},{wch:8},{wch:10},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws,'Summary');
+  // Detail sheet - all line items
+  const detRows=[['Date','Vendor','Group','Item','SKU','Unit','Qty','Price','Est. Total']];
+  S.orderHistory.forEach(o=>{
+    const d=new Date(o.date).toLocaleDateString();
+    o.items.forEach(i=>{ const tot=i.price?Number(i.qty)*i.price:null; detRows.push([d,o.vendor,i.group,i.name,i.sku||'',i.unit||'',i.qty,i.price||'',tot?+tot.toFixed(2):'']); });
+  });
+  const ws2=XLSX.utils.aoa_to_sheet(detRows);
+  ws2['!cols']=[{wch:12},{wch:20},{wch:18},{wch:34},{wch:13},{wch:7},{wch:6},{wch:8},{wch:11}];
+  XLSX.utils.book_append_sheet(wb,ws2,'All Line Items');
+  XLSX.writeFile(wb,`Order_History_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('Full history exported');
+}
+
+function cloneOrder(orderId){
+  const order=S.orderHistory.find(o=>o.id===orderId);
+  if(!order){ toast('Order not found'); return; }
+  // apply quantities as overrides on current items
+  let matched=0;
+  order.items.forEach(hi=>{
+    const liveItem=S.items.find(i=>i.id===hi.id||(i.name===hi.name&&i.vendor===order.vendor));
+    if(liveItem){ liveItem.oOv=hi.qty; matched++; }
+  });
+  if(!matched){ toast('No matching items found'); return; }
+  S.ui.cV=order.vendor;
+  persist();
+  toast(`Cloned ${matched} quantities — review in Order tab`,2500);
+  go('order-v');
+}
+
+/* ===== MANAGE ===== */
+function rManage(){
+  titleEl.textContent='Manage';
+  mainEl.innerHTML=`
+    <div class="mlist">
+      <div class="mrow" data-go="mv"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></div><div class="mbody"><div class="mtitle">Vendors</div><div class="msub">${S.vendors.length} vendor${S.vendors.length===1?'':'s'} &mdash; add, rename, delete</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" data-go="mg"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg></div><div class="mbody"><div class="mtitle">Groups &amp; categories</div><div class="msub">Organize items within vendors</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" data-go="mi"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div><div class="mbody"><div class="mtitle">Items</div><div class="msub">${S.items.length} items &mdash; par, unit, price, averages</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" id="units-btn"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 5l14 14M5 9l4-4M8 12l4-4M11 15l4-4M14 18l4-4"/></svg></div><div class="mbody"><div class="mtitle">Units</div><div class="msub">${S.units.length} units in master list (ea, case, carton…)</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" data-go="ms"><div class="mico" style="background:#f59e0b22;color:#f59e0b"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div><div class="mbody"><div class="mtitle">Seasons &amp; multipliers</div><div class="msub">${S.seasons.length} seasons · Adjust par by vendor &amp; category per season</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+    </div>
+    <div class="sh" style="margin-top:20px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6a8 3 0 0 0 16 0V6"/><path d="M4 12v6a8 3 0 0 0 16 0v-6"/></svg> Data &amp; backup</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:13px;color:var(--warning)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Data is stored locally in this browser. <strong>Export a backup regularly</strong> — clearing browser data will erase it.</div>
+    <div class="tbar">
+      <button class="btn" id="store-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg> Store name</button>
+      <button class="btn btn-s" id="exp-xl-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Export Excel</button>
+    </div>
+    <div class="sh" style="margin-top:16px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19 20H8.5l-4.21-4.3a1 1 0 0 1 0-1.41l10-9.19a1 1 0 0 1 1.41.03L19 9.42a1 1 0 0 1 0 1.41L9.54 20M18 13.3L11.35 6.65"/></svg> Reset &amp; clear</div>
+    <div class="tbar">
+      <button class="btn btn-w" id="clear-seed-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.5 8.5H18m-4.5 4.5H18M4 12.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M4 8.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M4 16.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M8.5 16.5H18"/></svg> Remove sample data</button>
+      <button class="btn btn-d" id="clear-all-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Clear all data</button>
+    </div>
+    <div class="fhint" style="margin-bottom:2px"><strong>Remove sample data</strong> — deletes the 291 pre-loaded items that haven't been counted yet. Keeps your own items, history &amp; settings.</div>
+    <div class="fhint"><strong>Clear all data</strong> — wipes everything and starts fresh. Cannot be undone.</div>
+    <div class="tbar">
+      <button class="btn" id="exp-json-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg> Export JSON backup</button>
+      <button class="btn" id="imp-json-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Import JSON</button>
+    </div>
+    <div class="tbar">
+      <button class="btn btn-p" id="imp-csv-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3M9 20.25c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zM12 16l1.5 4.5L15 16M19 16h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg> Import CSV</button>
+      <button class="btn" id="exp-csv-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3M9 20.25c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zM12 16l1.5 4.5L15 16M19 16h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg> Export CSV</button>
+    </div>
+    <input type="file" id="json-file" accept=".json" style="display:none">
+
+<!-- SEASON MODAL -->
+<div class="ovl" id="szn-modal">
+<div class="modal">
+  <div class="mtop"><h2 id="szn-modal-title">Add season</h2><button class="btn btn-sm" data-close="szn-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+  <div class="fr"><label>Season name</label><input type="text" id="f-szn-name" placeholder="e.g. Summer, Peak Season, Holiday"></div>
+  <div class="fc">
+    <div class="fr"><label>Start month</label>
+      <select id="f-szn-sm"><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6" selected>June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+    </div>
+    <div class="fr"><label>Start day</label><input type="number" id="f-szn-sd" min="1" max="31" value="1"></div>
+  </div>
+  <div class="fc">
+    <div class="fr"><label>End month</label>
+      <select id="f-szn-em"><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8" selected>August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select>
+    </div>
+    <div class="fr"><label>End day</label><input type="number" id="f-szn-ed" min="1" max="31" value="31"></div>
+  </div>
+  <div class="fr"><label>Color</label>
+    <input type="hidden" id="f-szn-color" value="#f59e0b">
+    <div id="szn-colors" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:5px"></div>
+  </div>
+  <style>.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border .1s}.color-swatch.sel{border-color:var(--text);transform:scale(1.15)}</style>
+  <div class="fhint" style="margin-top:8px">Seasons can wrap across year end (e.g. Winter: Nov 1 – Feb 28). Any date not in a named season uses default multipliers (1.0).</div>
+  <div class="fc" style="margin-top:12px">
+    <button class="btn btn-d" id="del-szn-btn" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Delete</button>
+    <button class="btn btn-p btn-block" id="save-szn-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m4 14v-4h4v4M8 4v4h6V4"/></svg> Save season</button>
+  </div>
+</div></div>
+
+  `;
+  mainEl.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+  const editStoreBtn=document.getElementById('edit-store-btn');
+  if(editStoreBtn) editStoreBtn.onclick=()=>{ const n=prompt('Store / location name:',S.storeName); if(n?.trim()){ S.storeName=n.trim(); persist(); render(); } };
+  document.getElementById('units-btn').onclick=openUnitsModal;
+  document.getElementById('store-btn').onclick=()=>{ const n=prompt('Store / station name:',S.storeName); if(n?.trim()){ S.storeName=n.trim(); persist(); toast('Saved'); } };
+  document.getElementById('clear-seed-btn').onclick=()=>{
+    const seedItems=S.items.filter(i=>i.id.startsWith('i_')&&(i.current===null||i.current===undefined||i.current===''));
+    if(!seedItems.length){ toast('No unmodified sample items found'); return; }
+    if(!confirm('Remove '+seedItems.length+' pre-loaded sample items that have not been counted yet?\nYour own items, order history, and settings are kept.')) return;
+    const before=S.items.length;
+    S.items=S.items.filter(i=>!(i.id.startsWith('i_')&&(i.current===null||i.current===undefined||i.current==='')));
+    const removed=before-S.items.length;
+    persist(); render(); toast('Removed '+removed+' sample items');
+  };
+  document.getElementById('clear-all-btn').onclick=()=>{
+    if(!confirm('WARNING: This deletes ALL data — vendors, items, order history, everything.\n\nThis cannot be undone. Continue?')) return;
+    if(!confirm('Final confirmation: wipe everything and start fresh?')) return;
+    localStorage.removeItem('stn_v5');
+    Object.assign(S,{vendors:[],items:[],units:[...DEFAULT_UNITS],orderHistory:[],storeName:'My Station',ui:{screen:'home',cV:'',cG:'All',mV:'',mG:'All'}});
+    persist(); render(); toast('All data cleared');
+  };
+  document.getElementById('exp-xl-btn').onclick=exportAllDataXLSX;
+  document.getElementById('exp-json-btn').onclick=exportJSON;
+  document.getElementById('imp-json-btn').onclick=()=>document.getElementById('json-file').click();
+  document.getElementById('json-file').onchange=importJSON;
+  document.getElementById('imp-csv-btn').onclick=()=>{ document.getElementById('csv-file').value=''; document.getElementById('csv-preview').innerHTML=''; document.getElementById('csv-do-btn').style.display='none'; document.getElementById('csv-modal').classList.add('open'); };
+  document.getElementById('exp-csv-btn').onclick=exportCSV;
+}
+
+/* ===== MANAGE VENDORS ===== */
+function rManageV(){
+  showBack('manage','Manage','Vendors');
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add',()=>document.getElementById('vendor-modal').classList.add('open'));
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>No vendors yet.</div>`; return; }
+  mainEl.innerHTML='';
+  S.vendors.forEach(v=>{
+    const ic=S.items.filter(i=>i.vendor===v.name).length;
+    const row=document.createElement('div'); row.className='lr';
+    row.innerHTML=`<div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></div><div class="lbody"><div class="ltitle">${esc(v.name)}</div><div class="lsub">${ic} items &middot; ${v.groups.length} groups</div></div><div class="lacts"><button class="btn btn-sm" data-r="${esc(v.name)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button><button class="btn btn-sm btn-d" data-d="${esc(v.name)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button></div>`;
+    row.querySelector('[data-r]').onclick=()=>{ const o=row.querySelector('[data-r]').dataset.r; const n=prompt('Rename vendor:',o); if(!n?.trim()||n===o) return; if(S.vendors.find(x=>x.name===n)){toast('Already exists');return;} S.vendors.find(x=>x.name===o).name=n.trim(); S.items.forEach(i=>{if(i.vendor===o)i.vendor=n.trim();}); if(S.ui.cV===o) S.ui.cV=n.trim(); render(); };
+    row.querySelector('[data-d]').onclick=()=>{ const n=row.querySelector('[data-d]').dataset.d; if(S.vendors.length<=1){toast('Keep at least one vendor');return;} const ic2=S.items.filter(i=>i.vendor===n).length; if(!confirm(`Delete "${n}"${ic2>0?` and ${ic2} item(s)`:''}?`)) return; S.vendors=S.vendors.filter(x=>x.name!==n); S.items=S.items.filter(i=>i.vendor!==n); if(S.ui.cV===n) S.ui.cV=S.vendors[0]?.name||''; render(); };
+    mainEl.appendChild(row);
+  });
+}
+
+/* ===== MANAGE GROUPS ===== */
+function rManageG(){
+  showBack('manage','Manage','Groups');
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>Add a vendor first.</div>`; return; }
+  if(!S.ui.mV||!S.vendors.find(v=>v.name===S.ui.mV)) S.ui.mV=S.vendors[0].name;
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add',()=>{ const sel=document.getElementById('f-gvendor'); sel.innerHTML=S.vendors.map(v=>`<option value="${esc(v.name)}">${esc(v.name)}</option>`).join(''); sel.value=S.ui.mV; document.getElementById('f-gname').value=''; document.getElementById('group-modal').classList.add('open'); });
+  const v=S.vendors.find(x=>x.name===S.ui.mV);
+  let html=`<div class="vtabs" id="mg-vt" style="margin-bottom:11px"></div>`;
+  if(!v.groups.length) html+=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>No groups yet.</div>`;
+  else v.groups.forEach(g=>{
+    const ic=S.items.filter(i=>i.vendor===v.name&&i.group===g).length;
+    html+=`<div class="lr"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg></div><div class="lbody"><div class="ltitle">${esc(g)}</div><div class="lsub">${ic} item${ic===1?'':'s'}</div></div><div class="lacts"><button class="btn btn-sm" data-rg="${esc(g)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button><button class="btn btn-sm btn-d" data-dg="${esc(g)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button></div></div>`;
+  });
+  mainEl.innerHTML=html;
+  const vt=document.getElementById('mg-vt');
+  S.vendors.forEach(vv=>{ const t=document.createElement('div'); t.className='vtab'+(vv.name===S.ui.mV?' active':''); t.textContent=vv.name; t.onclick=()=>{S.ui.mV=vv.name;render();}; vt.appendChild(t); });
+  mainEl.querySelectorAll('[data-rg]').forEach(b=>b.addEventListener('click',()=>{ const old=b.dataset.rg; const nw=prompt('Rename:',old); if(!nw?.trim()||nw===old) return; if(v.groups.includes(nw)){toast('Already exists');return;} v.groups[v.groups.indexOf(old)]=nw.trim(); S.items.forEach(i=>{if(i.vendor===v.name&&i.group===old)i.group=nw.trim();}); render(); }));
+  mainEl.querySelectorAll('[data-dg]').forEach(b=>b.addEventListener('click',()=>{ const g=b.dataset.dg; if(v.groups.length<=1){toast('Keep at least one group');return;} const ic=S.items.filter(i=>i.vendor===v.name&&i.group===g).length; if(!confirm(`Delete "${g}"${ic>0?` and ${ic} item(s)`:''}?`)) return; v.groups=v.groups.filter(x=>x!==g); S.items=S.items.filter(i=>!(i.vendor===v.name&&i.group===g)); render(); }));
+}
+
+/* ===== MANAGE ITEMS ===== */
+function rManageI(){
+  showBack('manage','Manage','Items');
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>Add a vendor first.</div>`; return; }
+  if(!S.ui.mV||!S.vendors.find(v=>v.name===S.ui.mV)) S.ui.mV=S.vendors[0].name;
+  if(!S.ui.mG) S.ui.mG='All';
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add item',()=>openItemModal(null));
+  let html=`<div class="vtabs" id="mi-vt"></div><div class="ctabs" id="mi-ct"></div><div id="mi-items"></div>`;
+  mainEl.innerHTML=html;
+  const vt=document.getElementById('mi-vt');
+  S.vendors.forEach(vv=>{ const t=document.createElement('div'); t.className='vtab'+(vv.name===S.ui.mV?' active':''); t.textContent=vv.name; t.onclick=()=>{S.ui.mV=vv.name;S.ui.mG='All';render();}; vt.appendChild(t); });
+  const ct=document.getElementById('mi-ct');
+  const at=document.createElement('div'); at.className='ctab'+(S.ui.mG==='All'?' active':''); at.textContent='All'; at.onclick=()=>{S.ui.mG='All';render();}; ct.appendChild(at);
+  gFor(S.ui.mV).forEach(g=>{ const t=document.createElement('div'); t.className='ctab'+(g===S.ui.mG?' active':''); t.textContent=g; t.onclick=()=>{S.ui.mG=g;render();}; ct.appendChild(t); });
+  const ie=document.getElementById('mi-items');
+  let items=S.items.filter(i=>i.vendor===S.ui.mV);
+  if(S.ui.mG!=='All') items=items.filter(i=>i.group===S.ui.mG);
+  if(!items.length){ ie.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>No items here yet.</div>`; return; }
+  const bg={};
+  items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
+  Object.keys(bg).sort().forEach(g=>{
+    if(S.ui.mG==='All'){ const h=document.createElement('div'); h.className='sh'; h.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}`; ie.appendChild(h); }
+    bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>{
+      const row=document.createElement('div'); row.className='lr'; row.style.cursor='pointer';
+      row.innerHTML=`<div class="lbody"><div class="ltitle">${esc(item.name)}</div><div class="lsub">${item.sku?`[${esc(item.sku)}] &middot; `:''}${esc(item.unit||'ea')} &middot; Par ${fpar(item)} &middot; Avg ${fnum(item.avg)}/wk${item.price?` &middot; $${Number(item.price).toFixed(2)}`:''}</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);font-size:15px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>`;
+      row.onclick=()=>openItemModal(item.id);
+      ie.appendChild(row);
+    });
+  });
+}
+
+/* ===== ITEM MODAL ===== */
+let _editId=null;
+function openItemModal(itemId){
+  _editId=itemId;
+  const vs=document.getElementById('f-vendor');
+  vs.innerHTML=S.vendors.map(v=>`<option value="${esc(v.name)}">${esc(v.name)}</option>`).join('');
+  vs.onchange=()=>refreshGroupSel(vs.value);
+  refreshUnitSel();
+  if(itemId){
+    const it=S.items.find(i=>i.id===itemId);
+    document.getElementById('im-title').textContent='Edit item';
+    document.getElementById('f-name').value=it.name;
+    vs.value=it.vendor; refreshGroupSel(it.vendor,it.group);
+    document.getElementById('f-sku').value=it.sku||'';
+    document.getElementById('f-avg').value=it.avg??'';
+    document.getElementById('f-par').value=it.parOv!==null&&it.parOv!==undefined?it.parOv:'';
+    document.getElementById('f-price').value=it.price||'';
+    document.getElementById('f-mult').value=it.multiple||1;
+    document.getElementById('f-curr').value=it.current!==null&&it.current!==undefined&&it.current!==''?it.current:'';
+    document.getElementById('f-unit').value=it.unit||'ea';
+    document.getElementById('del-item-btn').style.display='inline-flex';
+  } else {
+    document.getElementById('im-title').textContent='Add item';
+    document.getElementById('f-name').value='';
+    const dv=S.ui.mV||S.ui.cV||S.vendors[0]?.name||'';
+    vs.value=dv; refreshGroupSel(dv,S.ui.mG!=='All'?S.ui.mG:undefined);
+    ['f-sku','f-avg','f-par','f-price','f-curr'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('f-mult').value=1;
+    document.getElementById('del-item-btn').style.display='none';
+  }
+  document.getElementById('item-modal').classList.add('open');
+}
+function refreshGroupSel(vn,sel){
+  const gs=document.getElementById('f-group');
+  const groups=gFor(vn);
+  gs.innerHTML=groups.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('');
+  if(sel&&groups.includes(sel)) gs.value=sel;
+}
+function refreshUnitSel(){
+  const us=document.getElementById('f-unit');
+  us.innerHTML=S.units.map(u=>`<option value="${esc(u)}">${esc(u)}</option>`).join('');
+}
+document.getElementById('unit-add-btn').onclick=()=>{
+  const inp=document.getElementById('f-unit-new'), val=inp.value.trim();
+  if(!val) return;
+  const ex=S.units.find(u=>u.toLowerCase()===val.toLowerCase());
+  if(!ex){ S.units.push(val); S.units.sort(); persist(); }
+  refreshUnitSel(); document.getElementById('f-unit').value=ex||val; inp.value=''; toast(`Unit "${ex||val}" ready`);
+};
+document.getElementById('save-item-btn').onclick=()=>{
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){ toast('Item name required'); return; }
+  const avgV=document.getElementById('f-avg').value, parV=document.getElementById('f-par').value, currV=document.getElementById('f-curr').value;
+  const data={ name, vendor:document.getElementById('f-vendor').value, group:document.getElementById('f-group').value, sku:document.getElementById('f-sku').value.trim(), unit:document.getElementById('f-unit').value||'ea', avg:avgV===''?0:parseFloat(avgV)||0, parOv:parV===''?null:parseFloat(parV)||0, price:document.getElementById('f-price').value===''?null:parseFloat(document.getElementById('f-price').value), multiple:parseFloat(document.getElementById('f-mult').value)||1, current:currV===''?null:parseFloat(currV)||0 };
+  if(_editId){ Object.assign(S.items.find(i=>i.id===_editId),data); }
+  else { S.items.push({id:uid(),...data}); }
+  closeModal('item-modal'); render();
+};
+document.getElementById('del-item-btn').onclick=()=>{ if(!_editId||!confirm('Delete this item?')) return; S.items=S.items.filter(i=>i.id!==_editId); closeModal('item-modal'); render(); };
+
+/* ===== VENDOR MODAL ===== */
+document.getElementById('save-vendor-btn').onclick=()=>{
+  const n=document.getElementById('f-vname').value.trim();
+  if(!n) return;
+  if(S.vendors.find(v=>v.name===n)){toast('Already exists');return;}
+  S.vendors.push({name:n,groups:['General']});
+  document.getElementById('f-vname').value='';
+  closeModal('vendor-modal'); render();
+};
+
+/* ===== GROUP MODAL ===== */
+document.getElementById('save-group-btn').onclick=()=>{
+  const vn=document.getElementById('f-gvendor').value, n=document.getElementById('f-gname').value.trim();
+  if(!n) return;
+  const v=S.vendors.find(x=>x.name===vn);
+  if(v.groups.includes(n)){toast('Already exists');return;}
+  v.groups.push(n); document.getElementById('f-gname').value='';
+  closeModal('group-modal'); render();
+};
+
+/* ===== UNITS MODAL ===== */
+function openUnitsModal(){ renderUnitTags(); document.getElementById('units-modal').classList.add('open'); }
+function renderUnitTags(){
+  const el=document.getElementById('um-list'); if(!el) return;
+  el.innerHTML='';
+  S.units.forEach(u=>{ const t=document.createElement('span'); t.className='utag'; t.innerHTML=`${esc(u)} <span data-u="${esc(u)}">&times;</span>`; t.querySelector('span').onclick=()=>{ if(S.items.some(i=>i.unit===u)&&!confirm(`"${u}" is used by items. Remove from list?`)) return; S.units=S.units.filter(x=>x!==u); persist(); renderUnitTags(); }; el.appendChild(t); });
+}
+document.getElementById('um-add').onclick=()=>{
+  const inp=document.getElementById('um-new'), val=inp.value.trim();
+  if(!val) return;
+  if(S.units.find(u=>u.toLowerCase()===val.toLowerCase())){toast('Already exists');return;}
+  S.units.push(val); S.units.sort(); inp.value=''; persist(); renderUnitTags(); toast(`Added "${val}"`);
+};
+
+/* ===== EXCEL EXPORT (full data) ===== */
+function exportAllDataXLSX(){ loadXLSX(()=>_doExportAllDataXLSX()); }
+function _doExportAllDataXLSX(){
+  const wb=XLSX.utils.book_new();
+  // Summary
+  const summ=[['Station Inventory Export'],['Store',S.storeName],['Date',new Date().toLocaleDateString()],['Total Items',S.items.length],['Total Vendors',S.vendors.length],[''],['Vendor','Groups','Items']];
+  S.vendors.forEach(v=>summ.push([v.name,v.groups.join(', '),S.items.filter(i=>i.vendor===v.name).length]));
+  const ws0=XLSX.utils.aoa_to_sheet(summ);
+  ws0['!cols']=[{wch:20},{wch:35},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws0,'Summary');
+  // All items
+  const allRows=[['Vendor','Group','Item Name','Item Code','Unit','Weekly Avg','Par','Current On-Hand','Order Qty','Price','Order Multiple']];
+  S.vendors.forEach(v=>{ v.groups.forEach(g=>{ S.items.filter(i=>i.vendor===v.name&&i.group===g).sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ allRows.push([v.name,g,i.name,i.sku||'',i.unit||'ea',i.avg||0,calcParSeasonal(i.avg,i.parOv,i.vendor,i.group),i.current!==null&&i.current!==undefined?i.current:'',oQty(i),i.price||'',i.multiple||1]); }); }); });
+  const ws1=XLSX.utils.aoa_to_sheet(allRows);
+  ws1['!cols']=[{wch:20},{wch:18},{wch:34},{wch:13},{wch:8},{wch:10},{wch:8},{wch:14},{wch:10},{wch:9},{wch:13}];
+  XLSX.utils.book_append_sheet(wb,ws1,'All Items');
+  // Per vendor sheets
+  S.vendors.forEach(v=>{
+    const vRows=[['Group','Item','SKU','Unit','Weekly Avg','Par','On Hand','Order Qty','Price']];
+    v.groups.forEach(g=>{ S.items.filter(i=>i.vendor===v.name&&i.group===g).sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ vRows.push([g,i.name,i.sku||'',i.unit||'ea',i.avg||0,calcParSeasonal(i.avg,i.parOv,i.vendor,i.group),i.current!==null&&i.current!==undefined?i.current:'',oQty(i),i.price||'']); }); });
+    const vws=XLSX.utils.aoa_to_sheet(vRows);
+    vws['!cols']=[{wch:18},{wch:34},{wch:13},{wch:7},{wch:10},{wch:7},{wch:10},{wch:10},{wch:9}];
+    XLSX.utils.book_append_sheet(wb,vws,v.name.replace(/[:\\\/\?\*\[\]]/g,'').slice(0,31));
+  });
+  XLSX.writeFile(wb,`Inventory_${S.storeName.replace(/\s+/g,'_')}_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('Excel exported');
+}
+
+/* ===== CSV EXPORT ===== */
+function exportCSV(){
+  const rows=[['Vendor','Category','Item Code','Item Name','Weekly Average','Par','Unit','Price','Current On-Hand','Order Multiple','Current Order Qty']];
+  S.vendors.forEach(v=>{ v.groups.forEach(g=>{ S.items.filter(i=>i.vendor===v.name&&i.group===g).sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ rows.push([v.name,g,i.sku||'',i.name,fnum(i.avg),fpar(i),i.unit||'ea',i.price!=null?i.price:'',i.current!==null&&i.current!==undefined&&i.current!==''?i.current:'',i.multiple||1,fnum(oQty(i))]); }); }); });
+  const csv=rows.map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`inventory_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('CSV exported');
+}
+
+/* ===== CSV IMPORT ===== */
+document.getElementById('csv-file').onchange=function(){
+  const file=this.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const rows=parseCSV(reader.result);
+    if(!rows.length){document.getElementById('csv-preview').innerHTML='<div style="color:var(--danger)">Could not parse CSV.</div>';return;}
+    const hdrs=rows[0].map(h=>h.toLowerCase().trim());
+    const data=rows.slice(1).filter(r=>r.some(c=>c.trim()));
+    document.getElementById('csv-preview').innerHTML=`<div style="font-size:11px;color:var(--muted)">${data.length} data rows &middot; Headers: <em>${hdrs.join(', ')}</em></div><div style="font-size:11px;color:var(--success);margin-top:4px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Ready to import</div>`;
+    document.getElementById('csv-do-btn').style.display='block';
+    document.getElementById('csv-do-btn').onclick=()=>doCSVImport(hdrs,data);
+  };
+  reader.readAsText(file);
+};
+function parseCSV(txt){
+  const rows=[]; const re=/("(?:[^"]|"")*"|[^,\n\r]*)(,|\r?\n|$)/g; let row=[],m;
+  while((m=re.exec(txt))!==null){ let v=m[1]; if(v.startsWith('"')) v=v.slice(1,-1).replace(/""/g,'"'); row.push(v); if(m[2]!==','){ if(row.length) rows.push(row); row=[]; } if(m[2]===''||m.index+m[0].length>=txt.length) break; }
+  if(row.length>1) rows.push(row);
+  return rows.filter(r=>r.length>1||(r.length===1&&r[0].trim()));
+}
+function doCSVImport(hdrs,data){
+  const col=(...ns)=>{ for(const n of ns){ const i=hdrs.findIndex(h=>h.includes(n)); if(i>=0) return i; } return -1; };
+  const vc=col('vendor'),cc=col('category','group'),nc=col('item name','description','name'),sc=col('item code','sku','code'),ac=col('weekly avg','weekly average','avg'),pc=col('par'),uc=col('unit'),prc=col('price');
+  if(vc<0||cc<0||nc<0){alert('CSV needs Vendor, Category, and Item Name columns.');return;}
+  let added=0,updated=0;
+  data.forEach(row=>{
+    const g=(i)=>i>=0&&i<row.length?row[i].trim():'';
+    const vendor=g(vc),group=g(cc),name=g(nc);
+    if(!vendor||!name) return;
+    let v=S.vendors.find(x=>x.name===vendor);
+    if(!v){ v={name:vendor,groups:[]}; S.vendors.push(v); }
+    const grp=group||'General';
+    if(!v.groups.includes(grp)) v.groups.push(grp);
+    const avg=parseFloat(g(ac))||0, parV=g(pc), unit=g(uc)||'ea', price=g(prc)===''?null:parseFloat(g(prc)), sku=g(sc);
+    const ul=unit.toLowerCase();
+    if(!S.units.find(u=>u.toLowerCase()===ul)) S.units.push(unit);
+    const ex=S.items.find(i=>i.vendor===vendor&&i.name.toLowerCase()===name.toLowerCase());
+    if(ex){ if(avg) ex.avg=avg; if(parV) ex.parOv=parseFloat(parV)||null; if(unit) ex.unit=unit; if(price!==null) ex.price=price; if(sku) ex.sku=sku; ex.group=grp; updated++; }
+    else { S.items.push({id:uid(),name,vendor,group:grp,sku,avg,parOv:parV?parseFloat(parV)||null:null,unit,price,multiple:1,current:null}); added++; }
+  });
+  S.units.sort(); persist(); closeModal('csv-modal'); render();
+  toast(`Imported: ${added} added, ${updated} updated`);
+}
+
+/* ===== JSON BACKUP ===== */
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=`inventory_backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  toast('JSON backup downloaded');
+}
+function importJSON(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{ try{ const d=JSON.parse(reader.result); if(!d.items||!d.vendors) throw new Error('Invalid'); Object.assign(S,d); S.ui=S.ui||{screen:'home',cV:'',cG:'All',mV:'',mG:'All'}; if(!S.units||!S.units.length) S.units=[...DEFAULT_UNITS]; if(!S.orderHistory) S.orderHistory=[]; render(); toast('Backup restored'); }catch(err){alert('Import failed: '+err.message);} };
+  reader.readAsText(file);
+}
+
+/* ===== MODALS ===== */
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeModal(b.dataset.close));
+document.querySelectorAll('.ovl').forEach(o=>o.onclick=e=>{ if(e.target===o) o.classList.remove('open'); });
+function closeModal(id){ document.getElementById(id)?.classList.remove('open'); }
+
+
+/* ===== SEASONS SCREEN ===== */
+function rManageSeasons(){
+  showBack('manage','Manage','Seasons & multipliers');
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Season', openAddSeasonModal);
+
+  const now=new Date();
+  const activeSzn=currentSeason(now);
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  let html=`<div style="font-size:11px;color:var(--muted);margin-bottom:14px;line-height:1.6">
+    Set a multiplier for each vendor+group combination per season. A multiplier of <strong>1.5</strong> means par is 50% higher during that season. Leave blank or set to <strong>1.0</strong> for no adjustment.
+    ${activeSzn?`<br><br><strong style="color:${activeSzn.color}">&#9733; ${activeSzn.name} season is currently active.</strong> All par levels are being multiplied accordingly.`:'<br><br>No season is currently active — default multipliers (1.0) apply.'}
+  </div>`;
+
+  if(!S.seasons.length){
+    html+=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>No seasons defined yet.<br>Tap + Season to add one.</div>`;
+    mainEl.innerHTML=html; return;
+  }
+
+  S.seasons.forEach(szn=>{
+    const isActive=activeSzn&&activeSzn.id===szn.id;
+    const sm=szn.startMonth, sd=szn.startDay, em=szn.endMonth, ed=szn.endDay;
+    const rangeStr=`${MONTHS[sm-1]} ${sd} – ${MONTHS[em-1]} ${ed}`;
+    html+=`<div class="szn-card">
+      <div class="szn-card-top">
+        <div class="szn-dot" style="background:${szn.color}"></div>
+        <div class="szn-name">${esc(szn.name)}</div>
+        ${isActive?`<span class="szn-active-chip" style="background:${szn.color}">Active now</span>`:''}
+        <span class="szn-range">${rangeStr}</span>
+        <button class="btn btn-sm" data-edit-szn="${szn.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button>
+        <button class="btn btn-sm btn-d" data-del-szn="${szn.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button>
+      </div>
+      <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em">Multipliers by vendor &amp; group</div>`;
+
+    // Build grid: for each vendor, for each group, show input
+    S.vendors.forEach(v=>{
+      if(!v.groups.length) return;
+      html+=`<div style="font-size:11px;font-weight:700;color:var(--text);margin:8px 0 4px;padding-top:6px;border-top:1px solid var(--border)">${esc(v.name)}</div>`;
+      html+=`<div class="mult-grid">`;
+      v.groups.forEach(g=>{
+        const val=S.seasonMultipliers?.[v.name]?.[g]?.[szn.id]??'';
+        const isActiveMult=isActive&&Number(val||1)!==1;
+        html+=`<div class="mult-cell${isActiveMult?' active-szn':''}">
+          <div class="mc-label">${esc(g)}</div>
+          <input type="number" min="0.1" max="5" step="0.05"
+            value="${val}" placeholder="1.0"
+            data-szn="${szn.id}" data-vendor="${esc(v.name)}" data-group="${esc(g)}">
+        </div>`;
+      });
+      html+=`</div>`;
+    });
+    html+=`</div>`;
+  });
+
+  mainEl.innerHTML=html;
+
+  // Multiplier input handlers — save on change
+  mainEl.querySelectorAll('input[data-szn]').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      const {szn:sznId,vendor,group}=inp.dataset;
+      const val=parseFloat(inp.value);
+      if(!S.seasonMultipliers) S.seasonMultipliers={};
+      if(!S.seasonMultipliers[vendor]) S.seasonMultipliers[vendor]={};
+      if(!S.seasonMultipliers[vendor][group]) S.seasonMultipliers[vendor][group]={};
+      if(isNaN(val)||val===1||inp.value===''){ delete S.seasonMultipliers[vendor][group][sznId]; inp.value=''; }
+      else { S.seasonMultipliers[vendor][group][sznId]=Math.round(val*100)/100; }
+      persist(); toast('Saved');
+    });
+  });
+
+  // Delete season
+  mainEl.querySelectorAll('[data-del-szn]').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.delSzn;
+    const szn=S.seasons.find(s=>s.id===id);
+    if(!confirm(`Delete season "${szn?.name}"? Multipliers set for this season will also be removed.`)) return;
+    S.seasons=S.seasons.filter(s=>s.id!==id);
+    // clean multipliers
+    Object.values(S.seasonMultipliers||{}).forEach(vm=>Object.values(vm).forEach(gm=>delete gm[id]));
+    persist(); rManageSeasons();
+  });
+
+  // Edit season
+  mainEl.querySelectorAll('[data-edit-szn]').forEach(b=>b.onclick=()=>openEditSeasonModal(b.dataset.editSzn));
+}
+
+/* ===== ADD / EDIT SEASON MODAL ===== */
+let _editSznId=null;
+const SZN_COLORS=['#f59e0b','#3b82f6','#10b981','#8b5cf6','#ef4444','#06b6d4','#f97316','#84cc16'];
+
+function openAddSeasonModal(){ _editSznId=null; populateSeasonModal(null); document.getElementById('szn-modal').classList.add('open'); }
+function openEditSeasonModal(id){ _editSznId=id; populateSeasonModal(S.seasons.find(s=>s.id===id)); document.getElementById('szn-modal').classList.add('open'); }
+
+function populateSeasonModal(szn){
+  document.getElementById('szn-modal-title').textContent=szn?'Edit season':'Add season';
+  document.getElementById('f-szn-name').value=szn?.name||'';
+  document.getElementById('f-szn-sm').value=szn?.startMonth||6;
+  document.getElementById('f-szn-sd').value=szn?.startDay||1;
+  document.getElementById('f-szn-em').value=szn?.endMonth||8;
+  document.getElementById('f-szn-ed').value=szn?.endDay||31;
+  document.getElementById('f-szn-color').value=szn?.color||SZN_COLORS[0];
+  renderColorPicker(szn?.color||SZN_COLORS[0]);
+  document.getElementById('del-szn-btn').style.display=szn?'inline-flex':'none';
+}
+
+function renderColorPicker(selected){
+  const el=document.getElementById('szn-colors');
+  el.innerHTML=SZN_COLORS.map(c=>`<div class="color-swatch${c===selected?' sel':''}" data-color="${c}" style="background:${c}"></div>`).join('');
+  el.querySelectorAll('.color-swatch').forEach(sw=>sw.onclick=()=>{ document.getElementById('f-szn-color').value=sw.dataset.color; renderColorPicker(sw.dataset.color); });
+}
+
+document.getElementById('save-szn-btn').onclick=()=>{
+  const name=document.getElementById('f-szn-name').value.trim();
+  if(!name){ toast('Season name required'); return; }
+  const data={
+    name, color:document.getElementById('f-szn-color').value||SZN_COLORS[0],
+    startMonth:parseInt(document.getElementById('f-szn-sm').value)||6,
+    startDay:parseInt(document.getElementById('f-szn-sd').value)||1,
+    endMonth:parseInt(document.getElementById('f-szn-em').value)||8,
+    endDay:parseInt(document.getElementById('f-szn-ed').value)||31,
+  };
+  if(_editSznId){ Object.assign(S.seasons.find(s=>s.id===_editSznId),data); }
+  else { S.seasons.push({id:'s_'+uid(),...data}); }
+  persist(); closeModal('szn-modal'); rManageSeasons();
+};
+document.getElementById('del-szn-btn').onclick=()=>{
+  if(!_editSznId||!confirm('Delete this season?')) return;
+  S.seasons=S.seasons.filter(s=>s.id!==_editSznId);
+  Object.values(S.seasonMultipliers||{}).forEach(vm=>Object.values(vm).forEach(gm=>delete gm[_editSznId]));
+  persist(); closeModal('szn-modal'); rManageSeasons();
+};
+
+
+function showStoreSetup(){
+  // Show a proper modal for store name setup instead of browser prompt()
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML=`<div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:360px;text-align:center">
+    <img src="https://www.jandupetroleum.com/_next/image?url=%2Flogo%2Flogo.png&w=384&q=75" style="height:40px;margin-bottom:12px" onerror="this.style.display='none'">
+    <div style="font-size:17px;font-weight:800;margin-bottom:6px">Welcome!</div>
+    <div style="font-size:13px;color:#6b7280;margin-bottom:16px">Enter the name of this location to get started.</div>
+    <input type="text" id="setup-store-name" placeholder="e.g. Algoma BP, S-Stop" style="width:100%;height:44px;border:1.5px solid #e2e5ea;border-radius:8px;padding:0 12px;font-size:15px;font-family:inherit;text-align:center;margin-bottom:12px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button id="setup-store-btn" style="height:44px;background:#c8102e;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit">Set location name</button>
+      <button id="setup-skip-btn" style="height:36px;background:none;color:#6b7280;border:none;font-size:12px;cursor:pointer;font-family:inherit">Skip for now</button>
+    </div>
+  </div>`;
+  document.body.appendChild(overlay);
+  const inp=overlay.querySelector('#setup-store-name');
+  inp.focus();
+  overlay.querySelector('#setup-store-btn').onclick=()=>{
+    const n=inp.value.trim();
+    if(!n){ inp.style.borderColor='#c8102e'; return; }
+    S.storeName=n; persist(); document.body.removeChild(overlay); render();
+  };
+  overlay.querySelector('#setup-skip-btn').onclick=()=>document.body.removeChild(overlay);
+  inp.addEventListener('keydown',e=>{ if(e.key==='Enter') overlay.querySelector('#setup-store-btn').click(); });
+}
+/* ===== INIT ===== */
+loadState();
+// First-run: show inline name setup instead of prompt()
+render();
+if(S.storeName==='My Station'){
+  setTimeout(showStoreSetup, 900);
+}
+// Hide splash screen — always fires even if errors occur
+function hideSplash(){ try{ const sp=document.getElementById('splash'); if(sp){ sp.style.opacity='0'; setTimeout(()=>{ try{sp.remove();}catch(e){} },500); } }catch(e){} }
+setTimeout(hideSplash, 800);
+window.addEventListener('error', hideSplash); // also hide on JS error
+</script>
+</body>
+</html>
