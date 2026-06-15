@@ -581,7 +581,7 @@ function fnum(n){ if(n===null||n===undefined||n==='') return ''; const x=Number(
 function fpar(it){ return fnum(calcParSeasonal(it.avg,it.parOv,it.vendor,it.group)); }
 function esc(s){ return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function toast(msg,dur=2000){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),dur); }
-function cntOrder(){ return S.items.filter(i=>oQty(i)>0).length; }
+function cntOrder(){ return S.items.filter(i=>effQty(i)>0).length; }
 function cntCrit(){ return S.items.filter(i=>sFlag(i)==='crit').length; }
 function cntLow(){ return S.items.filter(i=>sFlag(i)==='low').length; }
 
@@ -645,7 +645,7 @@ function rHome(){
       <div class="sc ok"><div class="sn">${counted-crit-low>=0?counted-crit-low:0}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Well stocked</div></div>
     </div>
     <button class="cta primary" data-go="count"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4M9 17h.01"/></svg></div><div class="cbody"><div class="ctitle">Start inventory count</div><div class="csub">Enter current quantities by vendor &amp; group</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
-    <button class="cta secondary" data-go="order"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="cbody"><div class="ctitle">Review &amp; generate orders</div><div class="csub">${ord} item${ord===1?'':'s'} suggested across ${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length} vendor${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length===1?'':'s'}</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="cta secondary" data-go="order"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="cbody"><div class="ctitle">Review &amp; generate orders</div><div class="csub">${ord} item${ord===1?'':'s'} suggested across ${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&effQty(i)>0)).length} vendor${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&effQty(i)>0)).length===1?'':'s'}</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
     <button class="cta secondary" data-go="history"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8v4l3 3M3.05 11a9 9 0 1 0 .5-3.5"/><path d="M3 4.5v4h4"/></svg></div><div class="cbody"><div class="ctitle">Order history</div><div class="csub">${S.orderHistory.length} order${S.orderHistory.length===1?'':'s'} saved &mdash; view, print, or clone</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
     ${crit>0?`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--danger)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical — order immediately</div><div id="crit-list"></div>`:''}
   `;
@@ -851,6 +851,7 @@ function updateNavBadges(){
 /* ===== ORDER ===== */
 function rOrder(){
   titleEl.textContent='Review & order';
+  const _toOrd=S.items.filter(i=>effQty(i)>0);
   mainEl.innerHTML=`
     <div class="add-to-order-panel">
       <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg> Search &amp; add items to order</div>
@@ -972,7 +973,7 @@ function buildOrderVendorSection(){
   if(!sec) return;
   sec.innerHTML='';
 
-  const vendorsWithOrders=S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0));
+  const vendorsWithOrders=S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&effQty(i)>0));
 
   if(!vendorsWithOrders.length){
     sec.innerHTML=`<div style="text-align:center;color:var(--muted);padding:18px 16px;font-size:13px;border:1.5px dashed var(--border);border-radius:var(--rad)">
@@ -988,7 +989,7 @@ function buildOrderVendorSection(){
   sec.appendChild(hdr);
 
   vendorsWithOrders.forEach(v=>{
-    const items=S.items.filter(i=>i.vendor===v.name&&oQty(i)>0);
+    const items=S.items.filter(i=>i.vendor===v.name&&effQty(i)>0);
     const crit=items.filter(i=>sFlag(i)==='crit').length;
     const manualCount=items.filter(i=>i.oOv!==undefined&&i.oOv!==null&&!(i.current!==null&&i.current!==undefined&&i.current!=='')).length;
 
@@ -1011,7 +1012,7 @@ function buildOrderVendorSection(){
 
 function rOrderV(){
   showBack('order',S.ui.cV,S.ui.cV);
-  const items=S.items.filter(i=>i.vendor===S.ui.cV&&oQty(i)>0);
+  const items=S.items.filter(i=>i.vendor===S.ui.cV&&effQty(i)>0);
   if(!items.length){ go('order'); return; }
   const bg={};
   items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
