@@ -224,6 +224,14 @@ textarea.otxt{width:100%;min-height:160px;font-family:monospace;font-size:11px;b
 .sr-item .sri-add{background:var(--brand);color:#fff;border:none;border-radius:6px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:16px}
 .sr-item.already-added{opacity:.5;pointer-events:none}
 .sr-item.already-added .sri-add{background:var(--success)}
+.sri-qty-row{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.sri-qty-inp{width:54px;height:34px;text-align:center;border:1.5px solid var(--brand);border-radius:7px;font-size:14px;font-weight:700;color:var(--brand);background:var(--brand-light);font-family:inherit}
+.sri-qty-inp:focus{outline:none;border-color:var(--brand-dark)}
+.sri-unit{font-size:10px;color:var(--muted);white-space:nowrap}
+.sri-confirm{width:30px;height:30px;border-radius:7px;border:none;background:var(--brand);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sri-cancel{width:30px;height:30px;border-radius:7px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.sri-added{background:var(--success)!important}
+.sr-item.already-added .sri-add{background:var(--success)}
 .manual-qty-row{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
 .manual-qty-row label{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
 .manual-qty-row input{width:70px;height:36px;text-align:center;border:1.5px solid var(--brand);border-radius:7px;font-size:14px;font-weight:700;color:var(--brand);background:var(--brand-light)}
@@ -845,7 +853,6 @@ function updateNavBadges(){
 /* ===== ORDER ===== */
 function rOrder(){
   titleEl.textContent='Review & order';
-  const toOrd=S.items.filter(i=>oQty(i)>0);
   mainEl.innerHTML=`
     <div class="add-to-order-panel">
       <div class="panel-title"><i class="ti ti-search"></i> Search &amp; add items to order</div>
@@ -855,83 +862,154 @@ function rOrder(){
         <button class="clr-btn" id="ord-search-clr"><i class="ti ti-x"></i></button>
       </div>
       <div id="ord-search-results"></div>
-      <div class="fhint" style="margin-top:6px">Add any item directly to an order without going through the count process. Set the quantity on the order review screen.</div>
+      <div class="fhint" style="margin-top:5px">Search any item and set a quantity directly — added items appear in the vendor order below.</div>
     </div>
-    ${toOrd.length?`<div style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.6">Tap a vendor card to review suggested quantities and generate the order.</div><div class="sh"><i class="ti ti-building-store"></i> Vendors with items to order</div><div id="volist"></div>`:`<div class="empty" style="padding:20px 16px"><i class="ti ti-circle-check" style="color:var(--success)"></i>No items need ordering based on counts.<br><span style="font-size:11px">Use search above to manually add items.</span></div>`}
+    <div id="ord-vendor-section"></div>
   `;
 
-  // Order search logic
   const ordInp=document.getElementById('ord-search-inp');
   const ordResults=document.getElementById('ord-search-results');
   const ordClr=document.getElementById('ord-search-clr');
   const ordBar=document.getElementById('ord-search-bar');
+
+  buildOrderVendorSection(); // always build vendor section first
 
   function doOrdSearch(q){
     q=q.trim().toLowerCase();
     ordBar.classList.toggle('has-text',!!q);
     ordClr.style.display=q?'block':'none';
     if(!q){ ordResults.innerHTML=''; return; }
+
     const matches=S.items.filter(i=>
       i.name.toLowerCase().includes(q)||(i.sku&&i.sku.toLowerCase().includes(q))
     ).sort((a,b)=>{
       const aE=a.sku&&a.sku.toLowerCase()===q, bE=b.sku&&b.sku.toLowerCase()===q;
       if(aE&&!bE) return -1; if(bE&&!aE) return 1;
+      const aS=a.name.toLowerCase().startsWith(q), bS=b.name.toLowerCase().startsWith(q);
+      if(aS&&!bS) return -1; if(bS&&!aS) return 1;
       return a.name.localeCompare(b.name);
-    }).slice(0,20);
+    }).slice(0,25);
 
     if(!matches.length){
       ordResults.innerHTML=`<div class="no-results" style="padding:12px"><i class="ti ti-search-off"></i>No items match "<strong>${esc(q)}</strong>"</div>`;
       return;
     }
+
     ordResults.innerHTML='';
     const list=document.createElement('div'); list.className='search-results-list';
-    matches.forEach(item=>{
-      const alreadyAdded=item.oOv!==undefined&&item.oOv!==null;
-      const hasAutoOrder=oQty(item)>0;
-      const row=document.createElement('div');
-      row.className='sr-item'+(alreadyAdded||hasAutoOrder?' already-added':'');
-      const par=calcParSeasonal(item.avg,item.parOv,item.vendor,item.group);
+    matches.forEach(item=>list.appendChild(makeSearchRow(item)));
+    ordResults.appendChild(list);
+  }
+
+  function makeSearchRow(item){
+    const alreadyAdded=(item.oOv!==undefined&&item.oOv!==null)||oQty(item)>0;
+    const suggestedQty=item.oOv!==undefined&&item.oOv!==null ? item.oOv :
+                       oQty(item)>0 ? oQty(item) :
+                       calcParSeasonal(item.avg,item.parOv,item.vendor,item.group)||1;
+    const par=calcParSeasonal(item.avg,item.parOv,item.vendor,item.group);
+
+    const row=document.createElement('div');
+    row.className='sr-item';
+    row.dataset.id=item.id;
+
+    // Default state: info + add button
+    function renderDefault(){
       row.innerHTML=`
         <div class="sri-info">
           <div class="sri-name">${esc(item.name)}</div>
-          <div class="sri-meta">${item.sku?`[${esc(item.sku)}] &middot; `:''}${esc(item.vendor)} &rsaquo; ${esc(item.group)} &middot; Par ${par} ${esc(item.unit||'')}</div>
+          <div class="sri-meta">${item.sku?`[${esc(item.sku)}] &middot; `:''}${esc(item.vendor)} &rsaquo; ${esc(item.group)} &middot; Par ${par||'—'} ${esc(item.unit||'')}</div>
         </div>
-        <button class="sri-add" title="${alreadyAdded||hasAutoOrder?'Already in order':'Add to order'}">
-          <i class="ti ti-${alreadyAdded||hasAutoOrder?'check':'plus'}"></i>
+        <button class="sri-add${alreadyAdded?' sri-added':''}" title="${alreadyAdded?'Already in order — tap to change qty':'Add to order'}">
+          <i class="ti ti-${alreadyAdded?'check':'plus'}"></i>
         </button>`;
-      if(!alreadyAdded&&!hasAutoOrder){
-        row.querySelector('.sri-add').onclick=()=>{
-          // Set override qty to par (or 1 if no par) so it appears in order
-          item.oOv=par||1;
-          persist(); toast(`${item.name.slice(0,25)}… added to order`);
-          row.classList.add('already-added');
-          row.querySelector('.sri-add').innerHTML='<i class="ti ti-check"></i>';
-          // refresh vendor cards
-          if(document.getElementById('volist')) buildVendorCards();
-        };
-      }
-      list.appendChild(row);
-    });
-    ordResults.appendChild(list);
+      row.querySelector('.sri-add').onclick=()=>renderQtyExpanded();
+    }
+
+    // Expanded state: inline qty input + confirm
+    function renderQtyExpanded(){
+      row.innerHTML=`
+        <div class="sri-info" style="min-width:0">
+          <div class="sri-name" style="font-size:12px">${esc(item.name)}</div>
+          <div class="sri-meta">${esc(item.vendor)} &rsaquo; ${esc(item.group)}</div>
+        </div>
+        <div class="sri-qty-row">
+          <input type="number" class="sri-qty-inp" value="${suggestedQty}" min="0" step="${item.multiple||1}" inputmode="decimal">
+          <span class="sri-unit">${esc(item.unit||'')}</span>
+          <button class="sri-confirm"><i class="ti ti-check"></i></button>
+          <button class="sri-cancel"><i class="ti ti-x"></i></button>
+        </div>`;
+      const inp=row.querySelector('.sri-qty-inp');
+      inp.focus(); inp.select();
+      row.querySelector('.sri-confirm').onclick=()=>{
+        const qty=parseFloat(inp.value)||0;
+        if(qty<=0){ inp.style.borderColor='var(--danger)'; return; }
+        item.oOv=qty;
+        persist();
+        renderDefault();
+        buildOrderVendorSection(); // refresh vendor cards live
+        toast((item.name.length>28?item.name.slice(0,28)+'…':item.name)+' added — '+qty+' '+( item.unit||''));
+      };
+      row.querySelector('.sri-cancel').onclick=()=>renderDefault();
+      inp.addEventListener('keydown',e=>{
+        if(e.key==='Enter') row.querySelector('.sri-confirm').click();
+        if(e.key==='Escape') row.querySelector('.sri-cancel').click();
+      });
+    }
+
+    renderDefault();
+    return row;
   }
 
   ordInp.addEventListener('input',()=>doOrdSearch(ordInp.value));
   ordClr.addEventListener('click',()=>{ ordInp.value=''; doOrdSearch(''); ordInp.focus(); });
-  if(document.getElementById('volist')) buildVendorCards();
+}
+  buildOrderVendorSection();
 }
 
 function buildVendorCards(){
-  const list=document.getElementById('volist');
-  if(!list) return;
-  list.innerHTML='';
-  S.vendors.forEach(v=>{
+  // legacy alias
+  buildOrderVendorSection();
+}
+
+function buildOrderVendorSection(){
+  const sec=document.getElementById('ord-vendor-section');
+  if(!sec) return;
+  sec.innerHTML='';
+
+  const vendorsWithOrders=S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0));
+
+  if(!vendorsWithOrders.length){
+    sec.innerHTML=`<div style="text-align:center;color:var(--muted);padding:18px 16px;font-size:13px;border:1.5px dashed var(--border);border-radius:var(--rad)">
+      <i class="ti ti-clipboard-list" style="font-size:28px;display:block;margin-bottom:8px;color:var(--border)"></i>
+      <strong>No orders yet</strong><br>
+      <span style="font-size:11px">Search for items above to add them,<br>or count inventory in the Count tab to get auto-suggestions.</span>
+    </div>`;
+    return;
+  }
+
+  const hdr=document.createElement('div'); hdr.className='sh';
+  hdr.innerHTML=`<i class="ti ti-building-store"></i> Current orders — tap to review &amp; generate`;
+  sec.appendChild(hdr);
+
+  vendorsWithOrders.forEach(v=>{
     const items=S.items.filter(i=>i.vendor===v.name&&oQty(i)>0);
-    if(!items.length) return;
     const crit=items.filter(i=>sFlag(i)==='crit').length;
+    const manualCount=items.filter(i=>i.oOv!==undefined&&i.oOv!==null&&!(i.current!==null&&i.current!==undefined&&i.current!=='')).length;
+
     const card=document.createElement('div'); card.className='voc';
-    card.innerHTML=`<div class="vico"><i class="ti ti-building-store"></i></div><div class="vbody"><div class="vtitle">${esc(v.name)}</div><div class="vmeta">${items.length} item${items.length===1?'':'s'} to order${crit?` &middot; <strong style="color:var(--danger)">${crit} critical</strong>`:''}</div></div><div class="vbdg"><i class="ti ti-package"></i> ${items.length}</div>`;
+    card.innerHTML=`
+      <div class="vico"><i class="ti ti-building-store"></i></div>
+      <div class="vbody">
+        <div class="vtitle">${esc(v.name)}</div>
+        <div class="vmeta">
+          ${items.length} item${items.length===1?'':'s'} to order
+          ${crit?` &middot; <strong style="color:var(--danger)"><i class="ti ti-alert-triangle" style="font-size:10px"></i> ${crit} critical</strong>`:''}
+          ${manualCount?` &middot; <span style="color:var(--accent)">${manualCount} manually added</span>`:''}
+        </div>
+      </div>
+      <div class="vbdg"><i class="ti ti-package"></i> ${items.length}</div>`;
     card.onclick=()=>{S.ui.cV=v.name;go('order-v');};
-    list.appendChild(card);
+    sec.appendChild(card);
   });
 }
 
