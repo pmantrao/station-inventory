@@ -465,8 +465,7 @@ if('serviceWorker' in navigator){
 
 <script>
 /* ===== SEED ===== */
-const SEED = []
-;
+const SEED = [];
 
 /* ===== CONSTANTS ===== */
 const SK = 'stn_v5';
@@ -961,8 +960,6 @@ function rOrder(){
 
   ordInp.addEventListener('input',()=>doOrdSearch(ordInp.value));
   ordClr.addEventListener('click',()=>{ ordInp.value=''; doOrdSearch(''); ordInp.focus(); });
-}
-  buildOrderVendorSection();
 }
 
 function buildVendorCards(){
