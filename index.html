@@ -14,8 +14,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#1a1a2e">
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"></noscript>
+<noscript></noscript>
 <!-- SheetJS loaded on demand when export is triggered -->
 <style>
 :root{
@@ -294,7 +293,7 @@ if('serviceWorker' in navigator){
 <body>
 
 <div id="update-banner">
-  <span><i class="ti ti-refresh" style="font-size:14px"></i> App update available</span>
+  <span><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:14px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4"/></svg> App update available</span>
   <button onclick="window.location.reload()">Refresh now</button>
 </div>
 <div id="splash" style="position:fixed;inset:0;background:var(--navy);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s">
@@ -306,7 +305,7 @@ if('serviceWorker' in navigator){
   <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
 </div>
 <header id="hdr">
-  <button class="hbtn" id="back-btn" style="visibility:hidden"><i class="ti ti-arrow-left"></i><span id="back-label">Back</span></button>
+  <button class="hbtn" id="back-btn" style="visibility:hidden"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg><span id="back-label">Back</span></button>
   <div id="hdr-brand">
     <img src="https://www.jandupetroleum.com/_next/image?url=%2Flogo%2Flogo.png&w=384&q=75" alt="Jandu Petroleum" id="brand-logo" onerror="this.style.display='none';document.getElementById('brand-text').style.display='flex'">
     <div id="brand-text" style="display:none">
@@ -320,17 +319,17 @@ if('serviceWorker' in navigator){
 <main id="main"></main>
 
 <nav id="bnav">
-  <button class="ni active" data-s="home"><i class="ti ti-home"></i><span>Home</span></button>
-  <button class="ni" data-s="count"><i class="ti ti-clipboard-list"></i><span>Count</span></button>
-  <button class="ni" data-s="order"><i class="ti ti-shopping-cart"></i><span>Order</span><span class="nbdg" id="onbdg" style="display:none"></span></button>
-  <button class="ni" data-s="history"><i class="ti ti-history"></i><span>History</span></button>
-  <button class="ni" data-s="manage"><i class="ti ti-settings"></i><span>Manage</span></button>
+  <button class="ni active" data-s="home"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12L12 5l7 7M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7M10 21v-6h4v6"/></svg><span>Home</span></button>
+  <button class="ni" data-s="count"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4M9 17h.01"/></svg><span>Count</span></button>
+  <button class="ni" data-s="order"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span>Order</span><span class="nbdg" id="onbdg" style="display:none"></span></button>
+  <button class="ni" data-s="history"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8v4l3 3M3.05 11a9 9 0 1 0 .5-3.5"/><path d="M3 4.5v4h4"/></svg><span>History</span></button>
+  <button class="ni" data-s="manage"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Manage</span></button>
 </nav>
 
 <!-- ITEM MODAL -->
 <div class="ovl" id="item-modal">
 <div class="modal">
-  <div class="mtop"><h2 id="im-title">Add item</h2><button class="btn btn-sm" data-close="item-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2 id="im-title">Add item</h2><button class="btn btn-sm" data-close="item-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="fr"><label>Item name / description</label><input type="text" id="f-name" placeholder="e.g. Marlboro Red King Box"></div>
   <div class="fc">
     <div class="fr"><label>Vendor</label><select id="f-vendor"></select></div>
@@ -340,7 +339,7 @@ if('serviceWorker' in navigator){
     <div class="fr"><label>Item code / SKU</label><input type="text" id="f-sku" placeholder="Optional"></div>
     <div class="fr"><label>Unit</label>
       <select id="f-unit"></select>
-      <div class="uarow"><input type="text" id="f-unit-new" placeholder="Add unit…"><button class="btn btn-sm btn-p" id="unit-add-btn"><i class="ti ti-plus"></i></button></div>
+      <div class="uarow"><input type="text" id="f-unit-new" placeholder="Add unit…"><button class="btn btn-sm btn-p" id="unit-add-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg></button></div>
     </div>
   </div>
   <div class="fc">
@@ -353,54 +352,54 @@ if('serviceWorker' in navigator){
   </div>
   <div class="fr"><label>Current on-hand qty</label><input type="number" id="f-curr" placeholder="Leave blank = not yet counted" min="0" step="1"><div class="fhint">Blank items are excluded from order suggestions</div></div>
   <div class="fc" style="margin-top:6px">
-    <button class="btn btn-d" id="del-item-btn" style="display:none"><i class="ti ti-trash"></i> Delete</button>
-    <button class="btn btn-p btn-block" id="save-item-btn"><i class="ti ti-device-floppy"></i> Save item</button>
+    <button class="btn btn-d" id="del-item-btn" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Delete</button>
+    <button class="btn btn-p btn-block" id="save-item-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m4 14v-4h4v4M8 4v4h6V4"/></svg> Save item</button>
   </div>
 </div></div>
 
 <!-- VENDOR MODAL -->
 <div class="ovl" id="vendor-modal">
 <div class="modal">
-  <div class="mtop"><h2>Add vendor</h2><button class="btn btn-sm" data-close="vendor-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2>Add vendor</h2><button class="btn btn-sm" data-close="vendor-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="fr"><label>Vendor name</label><input type="text" id="f-vname" placeholder="e.g. McLane, Sysco, Coca-Cola"></div>
-  <button class="btn btn-p btn-block" id="save-vendor-btn"><i class="ti ti-plus"></i> Add vendor</button>
+  <button class="btn btn-p btn-block" id="save-vendor-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add vendor</button>
 </div></div>
 
 <!-- GROUP MODAL -->
 <div class="ovl" id="group-modal">
 <div class="modal">
-  <div class="mtop"><h2>Add group</h2><button class="btn btn-sm" data-close="group-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2>Add group</h2><button class="btn btn-sm" data-close="group-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="fr"><label>Vendor</label><select id="f-gvendor"></select></div>
   <div class="fr"><label>Group / category name</label><input type="text" id="f-gname" placeholder="e.g. Marlboro, Energy Drinks, Snus"></div>
-  <button class="btn btn-p btn-block" id="save-group-btn"><i class="ti ti-plus"></i> Add group</button>
+  <button class="btn btn-p btn-block" id="save-group-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add group</button>
 </div></div>
 
 <!-- ORDER MODAL -->
 <div class="ovl" id="order-modal">
 <div class="modal">
-  <div class="mtop"><h2 id="om-title">Order</h2><button class="btn btn-sm" data-close="order-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2 id="om-title">Order</h2><button class="btn btn-sm" data-close="order-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div id="om-body"></div>
   <div class="fr" style="margin-top:11px">
     <label>Order text — copy &amp; paste into email or message</label>
     <textarea class="otxt" id="om-txt" readonly></textarea>
   </div>
   <div class="tbar">
-    <button class="btn" id="om-copy"><i class="ti ti-copy"></i> Copy</button>
-    <button class="btn" id="om-print"><i class="ti ti-printer"></i> Print</button>
-    <button class="btn btn-s" id="om-xlsx"><i class="ti ti-file-spreadsheet"></i> Excel</button>
+    <button class="btn" id="om-copy"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg> Copy</button>
+    <button class="btn" id="om-print"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2M9 21h6a1 1 0 0 0 1-1v-5H8v5a1 1 0 0 0 1 1zM17 7V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2"/></svg> Print</button>
+    <button class="btn btn-s" id="om-xlsx"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Excel</button>
   </div>
-  <button class="btn btn-p btn-block" id="om-email"><i class="ti ti-mail"></i> Open email app</button>
+  <button class="btn btn-p btn-block" id="om-email"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg> Open email app</button>
   <div class="divider"></div>
-  <button class="btn btn-p btn-block btn-lg" id="om-confirm"><i class="ti ti-circle-check"></i> Confirm &amp; save to history</button>
+  <button class="btn btn-p btn-block btn-lg" id="om-confirm"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Confirm &amp; save to history</button>
   <div class="fhint" style="text-align:center;margin-top:6px">Saving records this order in History so you can review or clone it later</div>
 </div></div>
 
 <!-- UNITS MODAL -->
 <div class="ovl" id="units-modal">
 <div class="modal">
-  <div class="mtop"><h2>Manage units</h2><button class="btn btn-sm" data-close="units-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2>Manage units</h2><button class="btn btn-sm" data-close="units-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="fr"><label>Add new unit</label>
-    <div class="uarow"><input type="text" id="um-new" placeholder="e.g. sleeve, roll, drum"><button class="btn btn-sm btn-p" id="um-add"><i class="ti ti-plus"></i> Add</button></div>
+    <div class="uarow"><input type="text" id="um-new" placeholder="e.g. sleeve, roll, drum"><button class="btn btn-sm btn-p" id="um-add"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add</button></div>
   </div>
   <div class="fr"><label>All units (tap × to remove)</label><div id="um-list"></div></div>
 </div></div>
@@ -408,7 +407,7 @@ if('serviceWorker' in navigator){
 <!-- CSV IMPORT MODAL -->
 <div class="ovl" id="csv-modal">
 <div class="modal">
-  <div class="mtop"><h2>Import CSV</h2><button class="btn btn-sm" data-close="csv-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2>Import CSV</h2><button class="btn btn-sm" data-close="csv-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div style="font-size:11px;color:var(--muted);margin-bottom:11px;line-height:1.7">
     <strong>Required columns:</strong> Vendor, Category, Item Name<br>
     <strong>Optional:</strong> Item Code, Weekly Average, Par, Unit, Price<br>
@@ -416,19 +415,19 @@ if('serviceWorker' in navigator){
   </div>
   <div class="fr"><label>Select CSV file</label><input type="file" id="csv-file" accept=".csv" style="height:auto;padding:8px"></div>
   <div id="csv-preview" style="margin-top:9px;font-size:12px"></div>
-  <button class="btn btn-p btn-block" id="csv-do-btn" style="display:none;margin-top:10px"><i class="ti ti-upload"></i> Import now</button>
+  <button class="btn btn-p btn-block" id="csv-do-btn" style="display:none;margin-top:10px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Import now</button>
 </div></div>
 
 <!-- ORDER HISTORY DETAIL MODAL -->
 <div class="ovl" id="hdetail-modal">
 <div class="modal">
-  <div class="mtop"><h2 id="hd-title">Order detail</h2><button class="btn btn-sm" data-close="hdetail-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2 id="hd-title">Order detail</h2><button class="btn btn-sm" data-close="hdetail-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div id="hd-body"></div>
   <div class="tbar" style="margin-top:12px">
-    <button class="btn" id="hd-print"><i class="ti ti-printer"></i> Print</button>
-    <button class="btn btn-s" id="hd-xlsx"><i class="ti ti-file-spreadsheet"></i> Excel</button>
+    <button class="btn" id="hd-print"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M17 17h2a2 2 0 0 0 2-2v-4a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h2M9 21h6a1 1 0 0 0 1-1v-5H8v5a1 1 0 0 0 1 1zM17 7V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2"/></svg> Print</button>
+    <button class="btn btn-s" id="hd-xlsx"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Excel</button>
   </div>
-  <button class="btn btn-w btn-block" id="hd-clone" style="margin-top:7px"><i class="ti ti-copy"></i> Clone as new order</button>
+  <button class="btn btn-w btn-block" id="hd-clone" style="margin-top:7px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg> Clone as new order</button>
 </div></div>
 
 <input type="file" id="json-file" accept=".json" style="display:none">
@@ -436,7 +435,7 @@ if('serviceWorker' in navigator){
 <!-- SEASON MODAL -->
 <div class="ovl" id="szn-modal">
 <div class="modal">
-  <div class="mtop"><h2 id="szn-modal-title">Add season</h2><button class="btn btn-sm" data-close="szn-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2 id="szn-modal-title">Add season</h2><button class="btn btn-sm" data-close="szn-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="fr"><label>Season name</label><input type="text" id="f-szn-name" placeholder="e.g. Summer, Peak Season, Holiday"></div>
   <div class="fc">
     <div class="fr"><label>Start month</label>
@@ -457,8 +456,8 @@ if('serviceWorker' in navigator){
   <style>.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border .1s}.color-swatch.sel{border-color:var(--text);transform:scale(1.15)}</style>
   <div class="fhint" style="margin-top:8px">Seasons can wrap across year end (e.g. Winter: Nov 1 – Feb 28). Any date not in a named season uses default multipliers (1.0).</div>
   <div class="fc" style="margin-top:12px">
-    <button class="btn btn-d" id="del-szn-btn" style="display:none"><i class="ti ti-trash"></i> Delete</button>
-    <button class="btn btn-p btn-block" id="save-szn-btn"><i class="ti ti-device-floppy"></i> Save season</button>
+    <button class="btn btn-d" id="del-szn-btn" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Delete</button>
+    <button class="btn btn-p btn-block" id="save-szn-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m4 14v-4h4v4M8 4v4h6V4"/></svg> Save season</button>
   </div>
 </div></div>
 
@@ -636,20 +635,20 @@ function rHome(){
   mainEl.innerHTML=`
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:1px">
       <div style="font-size:20px;font-weight:800">${esc(S.storeName)}</div>
-      <button id="edit-store-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:2px;font-size:16px;line-height:1" title="Edit store name"><i class="ti ti-pencil" style="font-size:15px"></i></button>
+      <button id="edit-store-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;padding:2px;font-size:16px;line-height:1" title="Edit store name"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:15px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:14px">${(()=>{const _s=currentSeason();return _s?`<div style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;margin-bottom:8px;background:${_s.color}22;color:${_s.color};border:1px solid ${_s.color}44"><i class="ti ti-sun" style="font-size:13px"></i> ${_s.name} season — par levels adjusted</div>`:''})()}
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px">${(()=>{const _s=currentSeason();return _s?`<div style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;margin-bottom:8px;background:${_s.color}22;color:${_s.color};border:1px solid ${_s.color}44"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:13px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg> ${_s.name} season — par levels adjusted</div>`:''})()}
     ${S.items.length} items &middot; ${S.vendors.length} vendors &middot; ${counted} counted today</div>
     <div class="sgrid">
-      <div class="sc crit"><div class="sn">${crit}</div><div class="sl"><i class="ti ti-alert-triangle" style="font-size:12px"></i> Critical</div></div>
-      <div class="sc low"><div class="sn">${low}</div><div class="sl"><i class="ti ti-alert-circle" style="font-size:12px"></i> Low stock</div></div>
-      <div class="sc neutral"><div class="sn">${ord}</div><div class="sl"><i class="ti ti-shopping-cart" style="font-size:12px"></i> To order</div></div>
-      <div class="sc ok"><div class="sn">${counted-crit-low>=0?counted-crit-low:0}</div><div class="sl"><i class="ti ti-circle-check" style="font-size:12px"></i> Well stocked</div></div>
+      <div class="sc crit"><div class="sn">${crit}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical</div></div>
+      <div class="sc low"><div class="sn">${low}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Low stock</div></div>
+      <div class="sc neutral"><div class="sn">${ord}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> To order</div></div>
+      <div class="sc ok"><div class="sn">${counted-crit-low>=0?counted-crit-low:0}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Well stocked</div></div>
     </div>
-    <button class="cta primary" data-go="count"><div class="cico"><i class="ti ti-clipboard-list"></i></div><div class="cbody"><div class="ctitle">Start inventory count</div><div class="csub">Enter current quantities by vendor &amp; group</div></div><i class="ti ti-chevron-right" style="font-size:20px;opacity:.6"></i></button>
-    <button class="cta secondary" data-go="order"><div class="cico"><i class="ti ti-shopping-cart"></i></div><div class="cbody"><div class="ctitle">Review &amp; generate orders</div><div class="csub">${ord} item${ord===1?'':'s'} suggested across ${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length} vendor${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length===1?'':'s'}</div></div><i class="ti ti-chevron-right" style="font-size:20px;opacity:.6"></i></button>
-    <button class="cta secondary" data-go="history"><div class="cico"><i class="ti ti-history"></i></div><div class="cbody"><div class="ctitle">Order history</div><div class="csub">${S.orderHistory.length} order${S.orderHistory.length===1?'':'s'} saved &mdash; view, print, or clone</div></div><i class="ti ti-chevron-right" style="font-size:20px;opacity:.6"></i></button>
-    ${crit>0?`<div class="sh"><i class="ti ti-alert-triangle" style="color:var(--danger)"></i> Critical — order immediately</div><div id="crit-list"></div>`:''}
+    <button class="cta primary" data-go="count"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4M9 17h.01"/></svg></div><div class="cbody"><div class="ctitle">Start inventory count</div><div class="csub">Enter current quantities by vendor &amp; group</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="cta secondary" data-go="order"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div><div class="cbody"><div class="ctitle">Review &amp; generate orders</div><div class="csub">${ord} item${ord===1?'':'s'} suggested across ${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length} vendor${S.vendors.filter(v=>S.items.some(i=>i.vendor===v.name&&oQty(i)>0)).length===1?'':'s'}</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
+    <button class="cta secondary" data-go="history"><div class="cico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8v4l3 3M3.05 11a9 9 0 1 0 .5-3.5"/><path d="M3 4.5v4h4"/></svg></div><div class="cbody"><div class="ctitle">Order history</div><div class="csub">${S.orderHistory.length} order${S.orderHistory.length===1?'':'s'} saved &mdash; view, print, or clone</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:20px;opacity:.6"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></button>
+    ${crit>0?`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--danger)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical — order immediately</div><div id="crit-list"></div>`:''}
   `;
   mainEl.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
   const editStoreBtn=document.getElementById('edit-store-btn');
@@ -658,7 +657,7 @@ function rHome(){
     const cl=document.getElementById('crit-list');
     S.items.filter(i=>sFlag(i)==='crit').sort((a,b)=>(Number(a.current||0)/Math.max(calcPar(a.avg,a.parOv),.001))-(Number(b.current||0)/Math.max(calcPar(b.avg,b.parOv),.001))).slice(0,6).forEach(item=>{
       const d=document.createElement('div'); d.className='ic crit';
-      d.innerHTML=`<i class="ti ti-alert-triangle" style="font-size:19px;color:var(--danger);flex-shrink:0"></i><div class="ii"><div class="iname">${esc(item.name)}</div><div class="imeta"><span class="chip crit">Critical</span>${esc(item.vendor)} &middot; Hand: ${fnum(item.current)} / Par: ${fpar(item)}</div></div>`;
+      d.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:19px;color:var(--danger);flex-shrink:0"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg><div class="ii"><div class="iname">${esc(item.name)}</div><div class="imeta"><span class="chip crit">Critical</span>${esc(item.vendor)} &middot; Hand: ${fnum(item.current)} / Par: ${fpar(item)}</div></div>`;
       cl.appendChild(d);
     });
   }
@@ -667,14 +666,14 @@ function rHome(){
 /* ===== COUNT ===== */
 function rCount(){
   titleEl.textContent='Count inventory';
-  setHdrAct('<i class="ti ti-plus"></i> Item',()=>openItemModal(null));
-  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><i class="ti ti-building-store"></i>No vendors yet.<br>Go to Manage to set up vendors.</div>`; return; }
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Item',()=>openItemModal(null));
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>No vendors yet.<br>Go to Manage to set up vendors.</div>`; return; }
   if(!S.ui.cV) S.ui.cV=S.vendors[0].name;
   mainEl.innerHTML=`
     <div class="search-bar" id="count-search-bar">
-      <i class="ti ti-search"></i>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>
       <input type="search" id="count-search-inp" placeholder="Search by name or item code…" autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="clr-btn" id="count-search-clr" title="Clear"><i class="ti ti-x"></i></button>
+      <button class="clr-btn" id="count-search-clr" title="Clear"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>
     <div id="count-search-results" style="display:none"></div>
     <div id="count-normal">
@@ -715,13 +714,13 @@ function rCount(){
       return a.name.localeCompare(b.name);
     });
     if(!matches.length){
-      searchResults.innerHTML=`<div class="no-results"><i class="ti ti-search-off"></i>No items match "<strong>${esc(q)}</strong>"</div>`;
+      searchResults.innerHTML=`<div class="no-results"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>No items match "<strong>${esc(q)}</strong>"</div>`;
       return;
     }
     searchResults.innerHTML='';
     const countHdr=document.createElement('div');
     countHdr.className='sh';
-    countHdr.innerHTML=`<i class="ti ti-search"></i>${matches.length} result${matches.length===1?'':'s'} for "${esc(q)}"`;
+    countHdr.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>${matches.length} result${matches.length===1?'':'s'} for "${esc(q)}"`;
     searchResults.appendChild(countHdr);
     matches.forEach(item=>{
       const card=mkCountCard(item);
@@ -761,18 +760,18 @@ function rCount(){
   const ie=document.getElementById('cit');
   let items=S.items.filter(i=>i.vendor===S.ui.cV);
   if(S.ui.cG!=='All') items=items.filter(i=>i.group===S.ui.cG);
-  if(!items.length){ ie.innerHTML=`<div class="empty"><i class="ti ti-package"></i>No items here yet.</div>`; return; }
+  if(!items.length){ ie.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>No items here yet.</div>`; return; }
   if(S.ui.cG==='All'){
     const bg={};
     items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
-    Object.keys(bg).sort().forEach(g=>{ const h=document.createElement('div'); h.className='sh'; h.innerHTML=`<i class="ti ti-folder"></i>${esc(g)}`; ie.appendChild(h); bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>ie.appendChild(mkCountCard(item))); });
+    Object.keys(bg).sort().forEach(g=>{ const h=document.createElement('div'); h.className='sh'; h.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}`; ie.appendChild(h); bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>ie.appendChild(mkCountCard(item))); });
   } else { items.sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>ie.appendChild(mkCountCard(item))); }
 }
 
 function mkCountCard(item){
   const fl=sFlag(item);
   const card=document.createElement('div'); card.className='ic'+(fl?' '+fl:'');
-  const chips={'crit':'<span class="chip crit"><i class="ti ti-alert-triangle" style="font-size:9px"></i> Critical</span>','low':'<span class="chip low"><i class="ti ti-alert-circle" style="font-size:9px"></i> Low</span>','ok':'<span class="chip ok"><i class="ti ti-check" style="font-size:9px"></i> OK</span>'};
+  const chips={'crit':'<span class="chip crit"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical</span>','low':'<span class="chip low"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Low</span>','ok':'<span class="chip ok"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5L20 7"/></svg> OK</span>'};
 
   const info=document.createElement('div'); info.className='ii';
   info.style.cursor='pointer'; info.onclick=()=>openItemModal(item.id);
@@ -797,16 +796,16 @@ function mkCountCard(item){
     if(ord>0){
       const isCrit=c<=par*CRIT_RATIO;
       hint.className='order-hint has-order'+(isCrit?' crit':'');
-      hint.innerHTML=`<i class="ti ti-arrow-up"></i> Order ${fnum(ord)}<span class="hint-unit">${esc(item.unit||'')}</span>`;
+      hint.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 19V5M5 12l7-7 7 7"/></svg> Order ${fnum(ord)}<span class="hint-unit">${esc(item.unit||'')}</span>`;
     } else {
       hint.className='order-hint is-ok';
-      hint.innerHTML=`<i class="ti ti-circle-check"></i> OK`;
+      hint.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> OK`;
     }
   }
   refreshHint(item.current);
 
-  const up=document.createElement('button'); up.className='sbtn'; up.innerHTML='<i class="ti ti-plus" style="font-size:12px"></i>';
-  const dn=document.createElement('button'); dn.className='sbtn'; dn.innerHTML='<i class="ti ti-minus" style="font-size:12px"></i>';
+  const up=document.createElement('button'); up.className='sbtn'; up.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg>';
+  const dn=document.createElement('button'); dn.className='sbtn'; dn.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12h14"/></svg>';
   const qi=document.createElement('input'); qi.type='number'; qi.className='qi'; qi.inputMode='decimal'; qi.min='0'; qi.step='1';
   qi.value=(item.current===null||item.current===undefined||item.current==='')?'':item.current;
   qi.placeholder='—';
@@ -855,11 +854,11 @@ function rOrder(){
   titleEl.textContent='Review & order';
   mainEl.innerHTML=`
     <div class="add-to-order-panel">
-      <div class="panel-title"><i class="ti ti-search"></i> Search &amp; add items to order</div>
+      <div class="panel-title"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg> Search &amp; add items to order</div>
       <div class="search-bar" id="ord-search-bar">
-        <i class="ti ti-search"></i>
+        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>
         <input type="search" id="ord-search-inp" placeholder="Search by name or item code…" autocomplete="off" autocorrect="off" spellcheck="false">
-        <button class="clr-btn" id="ord-search-clr"><i class="ti ti-x"></i></button>
+        <button class="clr-btn" id="ord-search-clr"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
       <div id="ord-search-results"></div>
       <div class="fhint" style="margin-top:5px">Search any item and set a quantity directly — added items appear in the vendor order below.</div>
@@ -891,7 +890,7 @@ function rOrder(){
     }).slice(0,25);
 
     if(!matches.length){
-      ordResults.innerHTML=`<div class="no-results" style="padding:12px"><i class="ti ti-search-off"></i>No items match "<strong>${esc(q)}</strong>"</div>`;
+      ordResults.innerHTML=`<div class="no-results" style="padding:12px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>No items match "<strong>${esc(q)}</strong>"</div>`;
       return;
     }
 
@@ -920,7 +919,7 @@ function rOrder(){
           <div class="sri-meta">${item.sku?`[${esc(item.sku)}] &middot; `:''}${esc(item.vendor)} &rsaquo; ${esc(item.group)} &middot; Par ${par||'—'} ${esc(item.unit||'')}</div>
         </div>
         <button class="sri-add${alreadyAdded?' sri-added':''}" title="${alreadyAdded?'Already in order — tap to change qty':'Add to order'}">
-          <i class="ti ti-${alreadyAdded?'check':'plus'}"></i>
+          ${alreadyAdded?'<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5L20 7"/></svg>':'<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg>'}
         </button>`;
       row.querySelector('.sri-add').onclick=()=>renderQtyExpanded();
     }
@@ -935,8 +934,8 @@ function rOrder(){
         <div class="sri-qty-row">
           <input type="number" class="sri-qty-inp" value="${suggestedQty}" min="0" step="${item.multiple||1}" inputmode="decimal">
           <span class="sri-unit">${esc(item.unit||'')}</span>
-          <button class="sri-confirm"><i class="ti ti-check"></i></button>
-          <button class="sri-cancel"><i class="ti ti-x"></i></button>
+          <button class="sri-confirm"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5L20 7"/></svg></button>
+          <button class="sri-cancel"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button>
         </div>`;
       const inp=row.querySelector('.sri-qty-inp');
       inp.focus(); inp.select();
@@ -980,7 +979,7 @@ function buildOrderVendorSection(){
 
   if(!vendorsWithOrders.length){
     sec.innerHTML=`<div style="text-align:center;color:var(--muted);padding:18px 16px;font-size:13px;border:1.5px dashed var(--border);border-radius:var(--rad)">
-      <i class="ti ti-clipboard-list" style="font-size:28px;display:block;margin-bottom:8px;color:var(--border)"></i>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:28px;display:block;margin-bottom:8px;color:var(--border)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4M9 17h.01"/></svg>
       <strong>No orders yet</strong><br>
       <span style="font-size:11px">Search for items above to add them,<br>or count inventory in the Count tab to get auto-suggestions.</span>
     </div>`;
@@ -988,7 +987,7 @@ function buildOrderVendorSection(){
   }
 
   const hdr=document.createElement('div'); hdr.className='sh';
-  hdr.innerHTML=`<i class="ti ti-building-store"></i> Current orders — tap to review &amp; generate`;
+  hdr.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg> Current orders — tap to review &amp; generate`;
   sec.appendChild(hdr);
 
   vendorsWithOrders.forEach(v=>{
@@ -998,16 +997,16 @@ function buildOrderVendorSection(){
 
     const card=document.createElement('div'); card.className='voc';
     card.innerHTML=`
-      <div class="vico"><i class="ti ti-building-store"></i></div>
+      <div class="vico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></div>
       <div class="vbody">
         <div class="vtitle">${esc(v.name)}</div>
         <div class="vmeta">
           ${items.length} item${items.length===1?'':'s'} to order
-          ${crit?` &middot; <strong style="color:var(--danger)"><i class="ti ti-alert-triangle" style="font-size:10px"></i> ${crit} critical</strong>`:''}
+          ${crit?` &middot; <strong style="color:var(--danger)"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:10px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> ${crit} critical</strong>`:''}
           ${manualCount?` &middot; <span style="color:var(--accent)">${manualCount} manually added</span>`:''}
         </div>
       </div>
-      <div class="vbdg"><i class="ti ti-package"></i> ${items.length}</div>`;
+      <div class="vbdg"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg> ${items.length}</div>`;
     card.onclick=()=>{S.ui.cV=v.name;go('order-v');};
     sec.appendChild(card);
   });
@@ -1021,17 +1020,17 @@ function rOrderV(){
   items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
   let html=`<div style="font-size:11px;color:var(--muted);margin-bottom:13px;line-height:1.6">Adjust quantities if needed, then tap Generate to save &amp; share this order.</div>`;
   Object.keys(bg).sort().forEach(g=>{
-    html+=`<div class="sh"><i class="ti ti-folder"></i>${esc(g)}</div>`;
+    html+=`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}</div>`;
     bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>{
       const fl=sFlag(item);
       html+=`<div class="oc${fl==='crit'?' crit':''}">
         <div class="ii"><div class="iname">${esc(item.name)}</div>
-        <div class="imeta">${fl==='crit'?'<span class="chip crit"><i class="ti ti-alert-triangle" style="font-size:9px"></i> Critical</span>':''}<span>On hand ${fnum(item.current)} &middot; Par ${fpar(item)} ${esc(item.unit||'')}</span>${(()=>{const _m=seasonMultiplier(item.vendor,item.group);const _s=currentSeason();return _m!==1&&_s?`<span class="season-badge" style="background:${_s.color}22;color:${_s.color};border:1px solid ${_s.color}55">\u2605 ${_s.name} \xd7${_m.toFixed(2)}</span>`:''})()}</div></div>
+        <div class="imeta">${fl==='crit'?'<span class="chip crit"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:9px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical</span>':''}<span>On hand ${fnum(item.current)} &middot; Par ${fpar(item)} ${esc(item.unit||'')}</span>${(()=>{const _m=seasonMultiplier(item.vendor,item.group);const _s=currentSeason();return _m!==1&&_s?`<span class="season-badge" style="background:${_s.color}22;color:${_s.color};border:1px solid ${_s.color}55">\u2605 ${_s.name} \xd7${_m.toFixed(2)}</span>`:''})()}</div></div>
         <div><input type="number" class="oqi" min="0" step="${item.multiple||1}" value="${fnum(item.oOv!==undefined&&item.oOv!==null?item.oOv:oQty(item))}" data-id="${item.id}">
         <div class="ounit">${esc(item.unit||'')}</div></div></div>`;
     });
   });
-  html+=`<button class="btn btn-p btn-block btn-lg" id="gen-btn" style="margin-top:16px"><i class="ti ti-shopping-cart"></i> Generate order — ${items.length} item${items.length===1?'':'s'}</button>`;
+  html+=`<button class="btn btn-p btn-block btn-lg" id="gen-btn" style="margin-top:16px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Generate order — ${items.length} item${items.length===1?'':'s'}</button>`;
   mainEl.innerHTML=html;
   mainEl.querySelectorAll('.oqi').forEach(inp=>{
     inp.addEventListener('change',()=>{ const it=S.items.find(i=>i.id===inp.dataset.id); if(it){ it.oOv=parseFloat(inp.value)||0; persist(); } });
@@ -1066,7 +1065,7 @@ function openOrderModal(vname){
   let body=`<div class="fr"><label>Store name</label><input type="text" id="ord-store" value="${esc(S.storeName)}"></div>
     <div style="font-size:11px;color:var(--muted);margin-bottom:11px">Vendor: <strong>${esc(vname)}</strong> &middot; ${d}</div>`;
   Object.keys(bg).sort().forEach(g=>{
-    body+=`<div class="sh"><i class="ti ti-folder"></i>${esc(g)}</div>`;
+    body+=`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}</div>`;
     bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{ body+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px"><span>${esc(i.name)}</span><span style="font-weight:700;color:var(--accent)">${fnum(effQty(i))} ${esc(i.unit||'')}</span></div>`; });
   });
   document.getElementById('om-body').innerHTML=body;
@@ -1160,9 +1159,9 @@ let _histView=null;
 
 function rHistory(){
   titleEl.textContent='Order history';
-  if(!S.orderHistory.length){ mainEl.innerHTML=`<div class="empty"><i class="ti ti-history"></i>No orders saved yet.<br>Generate and confirm an order from the Order tab to record it here.</div>`; return; }
+  if(!S.orderHistory.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 8v4l3 3M3.05 11a9 9 0 1 0 .5-3.5"/><path d="M3 4.5v4h4"/></svg>No orders saved yet.<br>Generate and confirm an order from the Order tab to record it here.</div>`; return; }
   const vendors=[...new Set(S.orderHistory.map(o=>o.vendor))].sort();
-  setHdrAct('<i class="ti ti-file-spreadsheet"></i> Export all',()=>exportAllHistoryXLSX());
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Export all',()=>exportAllHistoryXLSX());
   let html=`<div class="frow" id="h-filters">
     <select id="h-vendor-filter"><option value="">All vendors</option>${vendors.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}</select>
     <input type="date" id="h-from" title="From date">
@@ -1185,7 +1184,7 @@ function rHistory(){
 
 function renderHistList(orders){
   const el=document.getElementById('hlist');
-  if(!orders.length){ el.innerHTML=`<div class="empty"><i class="ti ti-search"></i>No orders match these filters.</div>`; return; }
+  if(!orders.length){ el.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>No orders match these filters.</div>`; return; }
   el.innerHTML='';
   orders.forEach(order=>{
     const d=new Date(order.date);
@@ -1194,12 +1193,12 @@ function renderHistList(orders){
     const totalQty=order.items.reduce((s,i)=>s+(Number(i.qty)||0),0);
     const totalCost=order.items.reduce((s,i)=>s+(i.price?(Number(i.qty)||0)*i.price:0),0);
     const card=document.createElement('div'); card.className='hcard';
-    card.innerHTML=`<div class="hcard-top"><div class="hcard-vendor"><i class="ti ti-building-store" style="font-size:14px;color:var(--accent)"></i> ${esc(order.vendor)}</div><div class="hcard-date">${dStr} &middot; ${tStr}</div></div>
+    card.innerHTML=`<div class="hcard-top"><div class="hcard-vendor"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:14px;color:var(--accent)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg> ${esc(order.vendor)}</div><div class="hcard-date">${dStr} &middot; ${tStr}</div></div>
       <div class="hcard-meta">${order.items.length} items &middot; ${fnum(totalQty)} units${totalCost>0?` &middot; Est. $${totalCost.toFixed(2)}`:''}</div>
       <div class="hcard-acts">
-        <button class="btn" data-view="${order.id}"><i class="ti ti-eye"></i> View</button>
-        <button class="btn btn-w" data-clone="${order.id}"><i class="ti ti-copy"></i> Clone</button>
-        <button class="btn btn-d btn-sm" data-del="${order.id}"><i class="ti ti-trash"></i></button>
+        <button class="btn" data-view="${order.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="2"/><path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7"/></svg> View</button>
+        <button class="btn btn-w" data-clone="${order.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg> Clone</button>
+        <button class="btn btn-d btn-sm" data-del="${order.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button>
       </div>`;
     card.querySelector('[data-view]').onclick=()=>openHistDetail(order.id);
     card.querySelector('[data-clone]').onclick=()=>cloneOrder(order.id);
@@ -1218,7 +1217,7 @@ function openHistDetail(orderId){
   let body=`<div style="font-size:11px;color:var(--muted);margin-bottom:11px">Vendor: <strong>${esc(order.vendor)}</strong> &middot; ${d} &middot; ${order.items.length} items</div>`;
   let grandTot=0;
   Object.keys(bg).sort().forEach(g=>{
-    body+=`<div class="sh"><i class="ti ti-folder"></i>${esc(g)}</div>`;
+    body+=`<div class="sh"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}</div>`;
     bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(i=>{
       const tot=i.price?(Number(i.qty)*i.price):null; if(tot) grandTot+=tot;
       body+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px"><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(i.name)}</span><span style="white-space:nowrap;font-weight:700;color:var(--accent)">${fnum(i.qty)} ${esc(i.unit||'')}${tot?` <span style="color:var(--muted);font-weight:400">($${tot.toFixed(2)})</span>`:''}</span></div>`;
@@ -1313,39 +1312,39 @@ function rManage(){
   titleEl.textContent='Manage';
   mainEl.innerHTML=`
     <div class="mlist">
-      <div class="mrow" data-go="mv"><div class="mico"><i class="ti ti-building-store"></i></div><div class="mbody"><div class="mtitle">Vendors</div><div class="msub">${S.vendors.length} vendor${S.vendors.length===1?'':'s'} &mdash; add, rename, delete</div></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-      <div class="mrow" data-go="mg"><div class="mico"><i class="ti ti-folder"></i></div><div class="mbody"><div class="mtitle">Groups &amp; categories</div><div class="msub">Organize items within vendors</div></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-      <div class="mrow" data-go="mi"><div class="mico"><i class="ti ti-package"></i></div><div class="mbody"><div class="mtitle">Items</div><div class="msub">${S.items.length} items &mdash; par, unit, price, averages</div></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-      <div class="mrow" id="units-btn"><div class="mico"><i class="ti ti-ruler"></i></div><div class="mbody"><div class="mtitle">Units</div><div class="msub">${S.units.length} units in master list (ea, case, carton…)</div></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
-      <div class="mrow" data-go="ms"><div class="mico" style="background:#f59e0b22;color:#f59e0b"><i class="ti ti-sun"></i></div><div class="mbody"><div class="mtitle">Seasons &amp; multipliers</div><div class="msub">${S.seasons.length} seasons · Adjust par by vendor &amp; category per season</div></div><i class="ti ti-chevron-right" style="color:var(--muted)"></i></div>
+      <div class="mrow" data-go="mv"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></div><div class="mbody"><div class="mtitle">Vendors</div><div class="msub">${S.vendors.length} vendor${S.vendors.length===1?'':'s'} &mdash; add, rename, delete</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" data-go="mg"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg></div><div class="mbody"><div class="mtitle">Groups &amp; categories</div><div class="msub">Organize items within vendors</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" data-go="mi"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div><div class="mbody"><div class="mtitle">Items</div><div class="msub">${S.items.length} items &mdash; par, unit, price, averages</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" id="units-btn"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 5l14 14M5 9l4-4M8 12l4-4M11 15l4-4M14 18l4-4"/></svg></div><div class="mbody"><div class="mtitle">Units</div><div class="msub">${S.units.length} units in master list (ea, case, carton…)</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
+      <div class="mrow" data-go="ms"><div class="mico" style="background:#f59e0b22;color:#f59e0b"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div><div class="mbody"><div class="mtitle">Seasons &amp; multipliers</div><div class="msub">${S.seasons.length} seasons · Adjust par by vendor &amp; category per season</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg></div>
     </div>
-    <div class="sh" style="margin-top:20px"><i class="ti ti-database"></i> Data &amp; backup</div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6"><i class="ti ti-alert-circle" style="font-size:13px;color:var(--warning)"></i> Data is stored locally in this browser. <strong>Export a backup regularly</strong> — clearing browser data will erase it.</div>
+    <div class="sh" style="margin-top:20px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6a8 3 0 0 0 16 0V6"/><path d="M4 12v6a8 3 0 0 0 16 0v-6"/></svg> Data &amp; backup</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;line-height:1.6"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:13px;color:var(--warning)"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Data is stored locally in this browser. <strong>Export a backup regularly</strong> — clearing browser data will erase it.</div>
     <div class="tbar">
-      <button class="btn" id="store-btn"><i class="ti ti-pencil"></i> Store name</button>
-      <button class="btn btn-s" id="exp-xl-btn"><i class="ti ti-file-spreadsheet"></i> Export Excel</button>
+      <button class="btn" id="store-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg> Store name</button>
+      <button class="btn btn-s" id="exp-xl-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Export Excel</button>
     </div>
-    <div class="sh" style="margin-top:16px"><i class="ti ti-eraser"></i> Reset &amp; clear</div>
+    <div class="sh" style="margin-top:16px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19 20H8.5l-4.21-4.3a1 1 0 0 1 0-1.41l10-9.19a1 1 0 0 1 1.41.03L19 9.42a1 1 0 0 1 0 1.41L9.54 20M18 13.3L11.35 6.65"/></svg> Reset &amp; clear</div>
     <div class="tbar">
-      <button class="btn btn-w" id="clear-seed-btn"><i class="ti ti-layers-subtract"></i> Remove sample data</button>
-      <button class="btn btn-d" id="clear-all-btn"><i class="ti ti-trash"></i> Clear all data</button>
+      <button class="btn btn-w" id="clear-seed-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.5 8.5H18m-4.5 4.5H18M4 12.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M4 8.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M4 16.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M8.5 16.5H18"/></svg> Remove sample data</button>
+      <button class="btn btn-d" id="clear-all-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Clear all data</button>
     </div>
     <div class="fhint" style="margin-bottom:2px"><strong>Remove sample data</strong> — deletes the 291 pre-loaded items that haven't been counted yet. Keeps your own items, history &amp; settings.</div>
     <div class="fhint"><strong>Clear all data</strong> — wipes everything and starts fresh. Cannot be undone.</div>
     <div class="tbar">
-      <button class="btn" id="exp-json-btn"><i class="ti ti-download"></i> Export JSON backup</button>
-      <button class="btn" id="imp-json-btn"><i class="ti ti-upload"></i> Import JSON</button>
+      <button class="btn" id="exp-json-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg> Export JSON backup</button>
+      <button class="btn" id="imp-json-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Import JSON</button>
     </div>
     <div class="tbar">
-      <button class="btn btn-p" id="imp-csv-btn"><i class="ti ti-file-type-csv"></i> Import CSV</button>
-      <button class="btn" id="exp-csv-btn"><i class="ti ti-file-type-csv"></i> Export CSV</button>
+      <button class="btn btn-p" id="imp-csv-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3M9 20.25c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zM12 16l1.5 4.5L15 16M19 16h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg> Import CSV</button>
+      <button class="btn" id="exp-csv-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3M9 20.25c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zM12 16l1.5 4.5L15 16M19 16h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg> Export CSV</button>
     </div>
     <input type="file" id="json-file" accept=".json" style="display:none">
 
 <!-- SEASON MODAL -->
 <div class="ovl" id="szn-modal">
 <div class="modal">
-  <div class="mtop"><h2 id="szn-modal-title">Add season</h2><button class="btn btn-sm" data-close="szn-modal"><i class="ti ti-x"></i></button></div>
+  <div class="mtop"><h2 id="szn-modal-title">Add season</h2><button class="btn btn-sm" data-close="szn-modal"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
   <div class="fr"><label>Season name</label><input type="text" id="f-szn-name" placeholder="e.g. Summer, Peak Season, Holiday"></div>
   <div class="fc">
     <div class="fr"><label>Start month</label>
@@ -1366,8 +1365,8 @@ function rManage(){
   <style>.color-swatch{width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:border .1s}.color-swatch.sel{border-color:var(--text);transform:scale(1.15)}</style>
   <div class="fhint" style="margin-top:8px">Seasons can wrap across year end (e.g. Winter: Nov 1 – Feb 28). Any date not in a named season uses default multipliers (1.0).</div>
   <div class="fc" style="margin-top:12px">
-    <button class="btn btn-d" id="del-szn-btn" style="display:none"><i class="ti ti-trash"></i> Delete</button>
-    <button class="btn btn-p btn-block" id="save-szn-btn"><i class="ti ti-device-floppy"></i> Save season</button>
+    <button class="btn btn-d" id="del-szn-btn" style="display:none"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Delete</button>
+    <button class="btn btn-p btn-block" id="save-szn-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h10l4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m4 14v-4h4v4M8 4v4h6V4"/></svg> Save season</button>
   </div>
 </div></div>
 
@@ -1404,13 +1403,13 @@ function rManage(){
 /* ===== MANAGE VENDORS ===== */
 function rManageV(){
   showBack('manage','Manage','Vendors');
-  setHdrAct('<i class="ti ti-plus"></i> Add',()=>document.getElementById('vendor-modal').classList.add('open'));
-  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><i class="ti ti-building-store"></i>No vendors yet.</div>`; return; }
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add',()=>document.getElementById('vendor-modal').classList.add('open'));
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>No vendors yet.</div>`; return; }
   mainEl.innerHTML='';
   S.vendors.forEach(v=>{
     const ic=S.items.filter(i=>i.vendor===v.name).length;
     const row=document.createElement('div'); row.className='lr';
-    row.innerHTML=`<div class="mico"><i class="ti ti-building-store"></i></div><div class="lbody"><div class="ltitle">${esc(v.name)}</div><div class="lsub">${ic} items &middot; ${v.groups.length} groups</div></div><div class="lacts"><button class="btn btn-sm" data-r="${esc(v.name)}"><i class="ti ti-pencil"></i></button><button class="btn btn-sm btn-d" data-d="${esc(v.name)}"><i class="ti ti-trash"></i></button></div>`;
+    row.innerHTML=`<div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 21l18 0M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4M5 21l0-10.15M19 21l0-10.15M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg></div><div class="lbody"><div class="ltitle">${esc(v.name)}</div><div class="lsub">${ic} items &middot; ${v.groups.length} groups</div></div><div class="lacts"><button class="btn btn-sm" data-r="${esc(v.name)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button><button class="btn btn-sm btn-d" data-d="${esc(v.name)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button></div>`;
     row.querySelector('[data-r]').onclick=()=>{ const o=row.querySelector('[data-r]').dataset.r; const n=prompt('Rename vendor:',o); if(!n?.trim()||n===o) return; if(S.vendors.find(x=>x.name===n)){toast('Already exists');return;} S.vendors.find(x=>x.name===o).name=n.trim(); S.items.forEach(i=>{if(i.vendor===o)i.vendor=n.trim();}); if(S.ui.cV===o) S.ui.cV=n.trim(); render(); };
     row.querySelector('[data-d]').onclick=()=>{ const n=row.querySelector('[data-d]').dataset.d; if(S.vendors.length<=1){toast('Keep at least one vendor');return;} const ic2=S.items.filter(i=>i.vendor===n).length; if(!confirm(`Delete "${n}"${ic2>0?` and ${ic2} item(s)`:''}?`)) return; S.vendors=S.vendors.filter(x=>x.name!==n); S.items=S.items.filter(i=>i.vendor!==n); if(S.ui.cV===n) S.ui.cV=S.vendors[0]?.name||''; render(); };
     mainEl.appendChild(row);
@@ -1420,15 +1419,15 @@ function rManageV(){
 /* ===== MANAGE GROUPS ===== */
 function rManageG(){
   showBack('manage','Manage','Groups');
-  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><i class="ti ti-folder"></i>Add a vendor first.</div>`; return; }
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>Add a vendor first.</div>`; return; }
   if(!S.ui.mV||!S.vendors.find(v=>v.name===S.ui.mV)) S.ui.mV=S.vendors[0].name;
-  setHdrAct('<i class="ti ti-plus"></i> Add',()=>{ const sel=document.getElementById('f-gvendor'); sel.innerHTML=S.vendors.map(v=>`<option value="${esc(v.name)}">${esc(v.name)}</option>`).join(''); sel.value=S.ui.mV; document.getElementById('f-gname').value=''; document.getElementById('group-modal').classList.add('open'); });
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add',()=>{ const sel=document.getElementById('f-gvendor'); sel.innerHTML=S.vendors.map(v=>`<option value="${esc(v.name)}">${esc(v.name)}</option>`).join(''); sel.value=S.ui.mV; document.getElementById('f-gname').value=''; document.getElementById('group-modal').classList.add('open'); });
   const v=S.vendors.find(x=>x.name===S.ui.mV);
   let html=`<div class="vtabs" id="mg-vt" style="margin-bottom:11px"></div>`;
-  if(!v.groups.length) html+=`<div class="empty"><i class="ti ti-folder"></i>No groups yet.</div>`;
+  if(!v.groups.length) html+=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>No groups yet.</div>`;
   else v.groups.forEach(g=>{
     const ic=S.items.filter(i=>i.vendor===v.name&&i.group===g).length;
-    html+=`<div class="lr"><div class="mico"><i class="ti ti-folder"></i></div><div class="lbody"><div class="ltitle">${esc(g)}</div><div class="lsub">${ic} item${ic===1?'':'s'}</div></div><div class="lacts"><button class="btn btn-sm" data-rg="${esc(g)}"><i class="ti ti-pencil"></i></button><button class="btn btn-sm btn-d" data-dg="${esc(g)}"><i class="ti ti-trash"></i></button></div></div>`;
+    html+=`<div class="lr"><div class="mico"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg></div><div class="lbody"><div class="ltitle">${esc(g)}</div><div class="lsub">${ic} item${ic===1?'':'s'}</div></div><div class="lacts"><button class="btn btn-sm" data-rg="${esc(g)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button><button class="btn btn-sm btn-d" data-dg="${esc(g)}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button></div></div>`;
   });
   mainEl.innerHTML=html;
   const vt=document.getElementById('mg-vt');
@@ -1440,10 +1439,10 @@ function rManageG(){
 /* ===== MANAGE ITEMS ===== */
 function rManageI(){
   showBack('manage','Manage','Items');
-  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><i class="ti ti-package"></i>Add a vendor first.</div>`; return; }
+  if(!S.vendors.length){ mainEl.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>Add a vendor first.</div>`; return; }
   if(!S.ui.mV||!S.vendors.find(v=>v.name===S.ui.mV)) S.ui.mV=S.vendors[0].name;
   if(!S.ui.mG) S.ui.mG='All';
-  setHdrAct('<i class="ti ti-plus"></i> Add item',()=>openItemModal(null));
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Add item',()=>openItemModal(null));
   let html=`<div class="vtabs" id="mi-vt"></div><div class="ctabs" id="mi-ct"></div><div id="mi-items"></div>`;
   mainEl.innerHTML=html;
   const vt=document.getElementById('mi-vt');
@@ -1454,14 +1453,14 @@ function rManageI(){
   const ie=document.getElementById('mi-items');
   let items=S.items.filter(i=>i.vendor===S.ui.mV);
   if(S.ui.mG!=='All') items=items.filter(i=>i.group===S.ui.mG);
-  if(!items.length){ ie.innerHTML=`<div class="empty"><i class="ti ti-package"></i>No items here yet.</div>`; return; }
+  if(!items.length){ ie.innerHTML=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3zM12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>No items here yet.</div>`; return; }
   const bg={};
   items.forEach(i=>(bg[i.group]=bg[i.group]||[]).push(i));
   Object.keys(bg).sort().forEach(g=>{
-    if(S.ui.mG==='All'){ const h=document.createElement('div'); h.className='sh'; h.innerHTML=`<i class="ti ti-folder"></i>${esc(g)}`; ie.appendChild(h); }
+    if(S.ui.mG==='All'){ const h=document.createElement('div'); h.className='sh'; h.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"/></svg>${esc(g)}`; ie.appendChild(h); }
     bg[g].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item=>{
       const row=document.createElement('div'); row.className='lr'; row.style.cursor='pointer';
-      row.innerHTML=`<div class="lbody"><div class="ltitle">${esc(item.name)}</div><div class="lsub">${item.sku?`[${esc(item.sku)}] &middot; `:''}${esc(item.unit||'ea')} &middot; Par ${fpar(item)} &middot; Avg ${fnum(item.avg)}/wk${item.price?` &middot; $${Number(item.price).toFixed(2)}`:''}</div></div><i class="ti ti-chevron-right" style="color:var(--muted);font-size:15px"></i>`;
+      row.innerHTML=`<div class="lbody"><div class="ltitle">${esc(item.name)}</div><div class="lsub">${item.sku?`[${esc(item.sku)}] &middot; `:''}${esc(item.unit||'ea')} &middot; Par ${fpar(item)} &middot; Avg ${fnum(item.avg)}/wk${item.price?` &middot; $${Number(item.price).toFixed(2)}`:''}</div></div><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted);font-size:15px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6-6 6"/></svg>`;
       row.onclick=()=>openItemModal(item.id);
       ie.appendChild(row);
     });
@@ -1610,7 +1609,7 @@ document.getElementById('csv-file').onchange=function(){
     if(!rows.length){document.getElementById('csv-preview').innerHTML='<div style="color:var(--danger)">Could not parse CSV.</div>';return;}
     const hdrs=rows[0].map(h=>h.toLowerCase().trim());
     const data=rows.slice(1).filter(r=>r.some(c=>c.trim()));
-    document.getElementById('csv-preview').innerHTML=`<div style="font-size:11px;color:var(--muted)">${data.length} data rows &middot; Headers: <em>${hdrs.join(', ')}</em></div><div style="font-size:11px;color:var(--success);margin-top:4px"><i class="ti ti-circle-check"></i> Ready to import</div>`;
+    document.getElementById('csv-preview').innerHTML=`<div style="font-size:11px;color:var(--muted)">${data.length} data rows &middot; Headers: <em>${hdrs.join(', ')}</em></div><div style="font-size:11px;color:var(--success);margin-top:4px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Ready to import</div>`;
     document.getElementById('csv-do-btn').style.display='block';
     document.getElementById('csv-do-btn').onclick=()=>doCSVImport(hdrs,data);
   };
@@ -1669,7 +1668,7 @@ function closeModal(id){ document.getElementById(id)?.classList.remove('open'); 
 /* ===== SEASONS SCREEN ===== */
 function rManageSeasons(){
   showBack('manage','Manage','Seasons & multipliers');
-  setHdrAct('<i class="ti ti-plus"></i> Season', openAddSeasonModal);
+  setHdrAct('<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5v14M5 12h14"/></svg> Season', openAddSeasonModal);
 
   const now=new Date();
   const activeSzn=currentSeason(now);
@@ -1681,7 +1680,7 @@ function rManageSeasons(){
   </div>`;
 
   if(!S.seasons.length){
-    html+=`<div class="empty"><i class="ti ti-sun"></i>No seasons defined yet.<br>Tap + Season to add one.</div>`;
+    html+=`<div class="empty"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>No seasons defined yet.<br>Tap + Season to add one.</div>`;
     mainEl.innerHTML=html; return;
   }
 
@@ -1695,8 +1694,8 @@ function rManageSeasons(){
         <div class="szn-name">${esc(szn.name)}</div>
         ${isActive?`<span class="szn-active-chip" style="background:${szn.color}">Active now</span>`:''}
         <span class="szn-range">${rangeStr}</span>
-        <button class="btn btn-sm" data-edit-szn="${szn.id}"><i class="ti ti-pencil"></i></button>
-        <button class="btn btn-sm btn-d" data-del-szn="${szn.id}"><i class="ti ti-trash"></i></button>
+        <button class="btn btn-sm" data-edit-szn="${szn.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg></button>
+        <button class="btn btn-sm btn-d" data-del-szn="${szn.id}"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg></button>
       </div>
       <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em">Multipliers by vendor &amp; group</div>`;
 
