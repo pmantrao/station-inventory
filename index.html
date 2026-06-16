@@ -343,7 +343,7 @@ if('serviceWorker' in navigator){
     </div>
   </div>
   <div class="fc">
-    <div class="fr"><label>15-wk avg weekly sales</label><input type="number" id="f-avg" placeholder="0" min="0" step="0.01"><div class="fhint">Par = 2× this, auto-rounded</div></div>
+    <div class="fr"><label>Average weekly sales</label><input type="number" id="f-avg" placeholder="0" min="0" step="0.01"><div class="fhint">Par = 2× this, auto-rounded</div></div>
     <div class="fr"><label>Par override (optional)</label><input type="number" id="f-par" placeholder="Auto" min="0" step="1"><div class="fhint">Leave blank to auto-calculate</div></div>
   </div>
   <div class="fc">
@@ -470,7 +470,7 @@ const SEED = [];
 /* ===== CONSTANTS ===== */
 const SK = 'stn_v5';
 const DEFAULT_UNITS = ['bag','bottle','box','can','carton','case','drum','ea','gallon','kg','lb','liter','oz','pack','roll','sleeve'];
-const CRIT_RATIO = 0.25;
+const CRIT_RATIO = 0;
 
 /* ===== STATE ===== */
 let S = {
@@ -527,7 +527,7 @@ function seasonMultiplier(vendorName, groupName, date){
 function calcParSeasonal(avg, parOv, vendorName, groupName, date){
   const mult=seasonMultiplier(vendorName, groupName, date);
   if(parOv!==null&&parOv!==undefined&&parOv!=='') return Math.round(Number(parOv)*mult)||0;
-  const r=2*(Number(avg)||0)*mult;
+  const r=1*(Number(avg)||0)*mult;
   if(r<0.5) return 0;
   return Math.round(r);
 }
@@ -555,7 +555,7 @@ function uid(){ return 'x'+Math.random().toString(36).slice(2,9); }
 function gFor(vn){ return S.vendors.find(v=>v.name===vn)?.groups||[]; }
 function calcPar(avg,ov){
   if(ov!==null&&ov!==undefined&&ov!=='') return Number(ov);
-  const r=2*(Number(avg)||0);
+  const r=1*(Number(avg)||0);
   if(r<0.5) return 0;
   return Math.round(r);
 }
@@ -639,8 +639,6 @@ function rHome(){
     <div style="font-size:11px;color:var(--muted);margin-bottom:14px">${(()=>{const _s=currentSeason();return _s?`<div style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;margin-bottom:8px;background:${_s.color}22;color:${_s.color};border:1px solid ${_s.color}44"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:13px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg> ${_s.name} season — par levels adjusted</div>`:''})()}
     ${S.items.length} items &middot; ${S.vendors.length} vendors &middot; ${counted} counted today</div>
     <div class="sgrid">
-      <div class="sc crit"><div class="sn">${crit}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9v4m0 3h.01M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/></svg> Critical</div></div>
-      <div class="sc low"><div class="sn">${low}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Low stock</div></div>
       <div class="sc neutral"><div class="sn">${ord}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M17 19m-2 0a2 2 0 1 0 4 0 2 2 0 1 0-4 0M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> To order</div></div>
       <div class="sc ok"><div class="sn">${counted-crit-low>=0?counted-crit-low:0}</div><div class="sl"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="font-size:12px"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg> Well stocked</div></div>
     </div>
@@ -864,6 +862,7 @@ function rOrder(){
       <div class="fhint" style="margin-top:5px">Search any item and set a quantity directly — added items appear in the vendor order below.</div>
     </div>
     <div id="ord-vendor-section"></div>
+    <div id="ord-item-browser"></div>
   `;
 
   const ordInp=document.getElementById('ord-search-inp');
@@ -871,7 +870,9 @@ function rOrder(){
   const ordClr=document.getElementById('ord-search-clr');
   const ordBar=document.getElementById('ord-search-bar');
 
-  buildOrderVendorSection(); // always build vendor section first
+  buildOrderVendorSection();
+  buildOrderTabs();
+  buildOrderCards();
 
   function doOrdSearch(q){
     q=q.trim().toLowerCase();
@@ -899,6 +900,189 @@ function rOrder(){
     matches.forEach(item=>list.appendChild(makeSearchRow(item)));
     ordResults.appendChild(list);
   }
+
+function buildOrderTabs(){
+
+  const holder =
+    document.getElementById('ord-item-browser');
+
+  holder.innerHTML = `
+    <div class="vtabs" id="ovt"></div>
+    <div class="ctabs" id="oct"></div>
+    <div id="oit"></div>
+  `;
+
+  if(!S.ui.cV)
+    S.ui.cV = S.vendors[0]?.name || '';
+
+  const vt = document.getElementById('ovt');
+
+  S.vendors.forEach(v=>{
+    const t=document.createElement('div');
+    t.className='vtab'+
+      (v.name===S.ui.cV?' active':'');
+    t.textContent=v.name;
+
+    t.onclick=()=>{
+      S.ui.cV=v.name;
+      S.ui.cG='All';
+      buildOrderTabs();
+      buildOrderCards();
+
+      persist();
+
+    };
+
+    vt.appendChild(t);
+  });
+
+  const ct=document.getElementById('oct');
+
+  const all=document.createElement('div');
+  all.className='ctab'+
+    (S.ui.cG==='All'?' active':'');
+  all.textContent='All';
+
+  all.onclick=()=>{
+    S.ui.cG='All';
+     buildOrderTabs();
+    buildOrderCards();
+
+      persist();
+
+  };
+
+  ct.appendChild(all);
+
+  gFor(S.ui.cV).forEach(g=>{
+    const t=document.createElement('div');
+
+    t.className='ctab'+
+      (g===S.ui.cG?' active':'');
+
+    t.textContent=g;
+
+    t.onclick=()=>{
+      S.ui.cG=g;
+
+       buildOrderTabs();
+      buildOrderCards();
+        persist();
+
+    };
+
+    ct.appendChild(t);
+  });
+}
+
+function buildOrderCards(){
+
+  const ie=document.getElementById('oit');
+
+  let items =
+    S.items.filter(
+      i=>i.vendor===S.ui.cV
+    );
+
+  if(S.ui.cG!=='All'){
+    items =
+      items.filter(
+        i=>i.group===S.ui.cG
+      );
+  }
+
+  ie.innerHTML='';
+
+  items.forEach(item=>{
+
+    const fl=sFlag(item);
+
+    const card=document.createElement('div');
+    card.className='ic'+
+      (fl?' '+fl:'');
+
+    card.innerHTML=`
+      <div class="ii">
+        <div class="iname">
+          ${esc(item.name)}
+        </div>
+
+        <div class="imeta">
+          ${fl==='crit'
+            ?'<span class="chip crit">Critical</span>'
+            :''}
+
+          <span>
+            Par ${fpar(item)}
+            ${esc(item.unit||'')}
+          </span>
+        </div>
+      </div>
+    `;
+
+    const up=document.createElement('button');
+    up.className='sbtn';
+    up.textContent='+';
+
+    const dn=document.createElement('button');
+    dn.className='sbtn';
+    dn.textContent='−';
+
+    const qi=document.createElement('input');
+    qi.className='qi';
+
+    qi.value=item.oOv||'';
+
+    function saveQty(v){
+      item.oOv =
+        v==='' ? null :
+        parseFloat(v)||0;
+
+      persist();
+      buildOrderVendorSection();
+    }
+
+    qi.oninput=()=>{
+      saveQty(qi.value);
+    };
+
+    up.onclick=()=>{
+      const v=
+        (Number(item.oOv)||0)+1;
+
+      item.oOv=v;
+      qi.value=v;
+
+      saveQty(v);
+    };
+
+    dn.onclick=()=>{
+      const v=Math.max(
+        0,
+        (Number(item.oOv)||0)-1
+      );
+
+      item.oOv=v;
+      qi.value=v;
+
+      saveQty(v);
+    };
+
+    const sbtns=document.createElement('div');
+    sbtns.className='sbtns';
+    sbtns.appendChild(up);
+    sbtns.appendChild(dn);
+
+    const qw=document.createElement('div');
+    qw.className='qw';
+    qw.appendChild(qi);
+    qw.appendChild(sbtns);
+
+    card.appendChild(qw);
+
+    ie.appendChild(card);
+  });
+}
 
   function makeSearchRow(item){
     const alreadyAdded=(item.oOv!==undefined&&item.oOv!==null)||oQty(item)>0;
@@ -961,6 +1145,126 @@ function rOrder(){
 
   ordInp.addEventListener('input',()=>doOrdSearch(ordInp.value));
   ordClr.addEventListener('click',()=>{ ordInp.value=''; doOrdSearch(''); ordInp.focus(); });
+}
+
+function buildOrderItemBrowser(){
+
+  const holder =
+    document.getElementById('ord-item-browser');
+
+  if(!holder) return;
+
+  const byVendor = {};
+
+  S.items.forEach(i=>{
+    if(!byVendor[i.vendor])
+      byVendor[i.vendor] = {};
+
+    if(!byVendor[i.vendor][i.group])
+      byVendor[i.vendor][i.group] = [];
+
+    byVendor[i.vendor][i.group].push(i);
+  });
+
+  let html='';
+
+  Object.keys(byVendor)
+    .sort()
+    .forEach(vendor=>{
+
+      html += `
+      <div class="sh"
+           style="margin-top:18px">
+        ${esc(vendor)}
+      </div>`;
+
+      Object.keys(byVendor[vendor])
+        .sort()
+        .forEach(group=>{
+
+          html += `
+          <div class="card"
+               style="margin-bottom:12px">
+
+            <div style="
+                 font-weight:700;
+                 margin-bottom:10px">
+              ${esc(group)}
+            </div>
+          `;
+
+          byVendor[vendor][group]
+            .sort((a,b)=>
+              a.name.localeCompare(b.name)
+            )
+            .forEach(item=>{
+
+              const qty =
+                item.oOv || '';
+
+              html += `
+              <div style="
+                   display:flex;
+                   align-items:center;
+                   justify-content:space-between;
+                   gap:10px;
+                   padding:8px 0;
+                   border-bottom:1px solid var(--border)">
+
+                <div>
+                  <div style="
+                       font-size:13px;
+                       font-weight:600">
+                    ${esc(item.name)}
+                  </div>
+
+                  <div style="
+                       font-size:11px;
+                       color:var(--muted)">
+                    Par ${fpar(item)}
+                    · Current ${fnum(item.current)}
+                  </div>
+                </div>
+
+                <input
+                  type="number"
+                  min="0"
+                  value="${qty}"
+                  style="width:80px"
+                  onchange="
+                    setOrderQty(
+                      '${item.id}',
+                      this.value
+                    )">
+              </div>
+              `;
+            });
+
+          html += `</div>`;
+        });
+    });
+
+  holder.innerHTML = html;
+}
+
+function setOrderQty(id,val){
+
+  const item =
+    S.items.find(i=>i.id===id);
+
+  if(!item) return;
+
+  const qty =
+    Math.max(
+      0,
+      Number(val)||0
+    );
+
+  item.oOv = qty;
+
+  persist();
+
+  buildOrderVendorSection();
 }
 
 function buildVendorCards(){
@@ -1322,17 +1626,7 @@ function rManage(){
       <button class="btn" id="store-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 20h4l10.5-10.5a2.828 2.828 0 1 0-4-4L4 16v4M13.5 6.5l4 4"/></svg> Store name</button>
       <button class="btn btn-s" id="exp-xl-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2zM8 11h8M8 15h8M11 11v8"/></svg> Export Excel</button>
     </div>
-    <div class="sh" style="margin-top:16px"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19 20H8.5l-4.21-4.3a1 1 0 0 1 0-1.41l10-9.19a1 1 0 0 1 1.41.03L19 9.42a1 1 0 0 1 0 1.41L9.54 20M18 13.3L11.35 6.65"/></svg> Reset &amp; clear</div>
-    <div class="tbar">
-      <button class="btn btn-w" id="clear-seed-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.5 8.5H18m-4.5 4.5H18M4 12.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M4 8.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M4 16.5a.5.5 0 1 0 1 0 .5.5 0 1 0-1 0M8.5 16.5H18"/></svg> Remove sample data</button>
-      <button class="btn btn-d" id="clear-all-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7h16M10 11v6M14 11v6M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-12M9 7V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/></svg> Clear all data</button>
-    </div>
-    <div class="fhint" style="margin-bottom:2px"><strong>Remove sample data</strong> — deletes the 291 pre-loaded items that haven't been counted yet. Keeps your own items, history &amp; settings.</div>
-    <div class="fhint"><strong>Clear all data</strong> — wipes everything and starts fresh. Cannot be undone.</div>
-    <div class="tbar">
-      <button class="btn" id="exp-json-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"/></svg> Export JSON backup</button>
-      <button class="btn" id="imp-json-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 9l5-5 5 5M12 4v12"/></svg> Import JSON</button>
-    </div>
+   
     <div class="tbar">
       <button class="btn btn-p" id="imp-csv-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3M9 20.25c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zM12 16l1.5 4.5L15 16M19 16h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg> Import CSV</button>
       <button class="btn" id="exp-csv-btn"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v3M9 20.25c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zM12 16l1.5 4.5L15 16M19 16h-2a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h2"/></svg> Export CSV</button>
@@ -1374,26 +1668,26 @@ function rManage(){
   if(editStoreBtn) editStoreBtn.onclick=()=>{ const n=prompt('Store / location name:',S.storeName); if(n?.trim()){ S.storeName=n.trim(); persist(); render(); } };
   document.getElementById('units-btn').onclick=openUnitsModal;
   document.getElementById('store-btn').onclick=()=>{ const n=prompt('Store / station name:',S.storeName); if(n?.trim()){ S.storeName=n.trim(); persist(); toast('Saved'); } };
-  document.getElementById('clear-seed-btn').onclick=()=>{
-    const seedItems=S.items.filter(i=>i.id.startsWith('i_')&&(i.current===null||i.current===undefined||i.current===''));
-    if(!seedItems.length){ toast('No unmodified sample items found'); return; }
-    if(!confirm('Remove '+seedItems.length+' pre-loaded sample items that have not been counted yet?\nYour own items, order history, and settings are kept.')) return;
-    const before=S.items.length;
-    S.items=S.items.filter(i=>!(i.id.startsWith('i_')&&(i.current===null||i.current===undefined||i.current==='')));
-    const removed=before-S.items.length;
-    persist(); render(); toast('Removed '+removed+' sample items');
-  };
-  document.getElementById('clear-all-btn').onclick=()=>{
-    if(!confirm('WARNING: This deletes ALL data — vendors, items, order history, everything.\n\nThis cannot be undone. Continue?')) return;
-    if(!confirm('Final confirmation: wipe everything and start fresh?')) return;
-    localStorage.removeItem('stn_v5');
-    Object.assign(S,{vendors:[],items:[],units:[...DEFAULT_UNITS],orderHistory:[],storeName:'My Station',ui:{screen:'home',cV:'',cG:'All',mV:'',mG:'All'}});
-    persist(); render(); toast('All data cleared');
-  };
+  //document.getElementById('clear-seed-btn').onclick=()=>{
+  //  const seedItems=S.items.filter(i=>i.id.startsWith('i_')&&(i.current===null||i.current===undefined||i.current===''));
+  //  if(!seedItems.length){ toast('No unmodified sample items found'); return; }
+  //  if(!confirm('Remove '+seedItems.length+' pre-loaded sample items that have not been counted yet?\nYour own items, order history, and settings are kept.')) return;
+ //   const before=S.items.length;
+ //   S.items=S.items.filter(i=>!(i.id.startsWith('i_')&&(i.current===null||i.current===undefined||i.current==='')));
+ //   const removed=before-S.items.length;
+ //   persist(); render(); toast('Removed '+removed+' sample items');
+ // };
+ // document.getElementById('clear-all-btn').onclick=()=>{
+ //   if(!confirm('WARNING: This deletes ALL data — vendors, items, order history, everything.\n\nThis cannot be undone. Continue?')) return;
+ //   if(!confirm('Final confirmation: wipe everything and start fresh?')) return;
+ //   localStorage.removeItem('stn_v5');
+ //   Object.assign(S,{vendors:[],items:[],units:[...DEFAULT_UNITS],orderHistory:[],storeName:'My Station',ui:{screen:'home',cV:'',cG:'All',mV:'',mG:'All'}});
+  //  persist(); render(); toast('All data cleared');
+ // };
   document.getElementById('exp-xl-btn').onclick=exportAllDataXLSX;
-  document.getElementById('exp-json-btn').onclick=exportJSON;
-  document.getElementById('imp-json-btn').onclick=()=>document.getElementById('json-file').click();
-  document.getElementById('json-file').onchange=importJSON;
+ // document.getElementById('exp-json-btn').onclick=exportJSON;
+ // document.getElementById('imp-json-btn').onclick=()=>document.getElementById('json-file').click();
+ // document.getElementById('json-file').onchange=importJSON;
   document.getElementById('imp-csv-btn').onclick=()=>{ document.getElementById('csv-file').value=''; document.getElementById('csv-preview').innerHTML=''; document.getElementById('csv-do-btn').style.display='none'; document.getElementById('csv-modal').classList.add('open'); };
   document.getElementById('exp-csv-btn').onclick=exportCSV;
 }
