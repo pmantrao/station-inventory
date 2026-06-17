@@ -526,8 +526,10 @@ function seasonMultiplier(vendorName, groupName, date){
 
 function calcParSeasonal(avg, parOv, vendorName, groupName, date){
   const mult=seasonMultiplier(vendorName, groupName, date);
-  if(parOv!==null&&parOv!==undefined&&parOv!=='') return Math.round(Number(parOv)*mult)||0;
-  const r=1*(Number(avg)||0)*mult;
+  var multiplier = 1;
+  if(parOv!==null&&parOv!==undefined&&parOv!=='')
+    multiplier = parOv;
+  const r=multiplier*(Number(avg)||0)*mult;
   if(r<0.5) return 0;
   return Math.round(r);
 }
@@ -554,8 +556,11 @@ function seedData(){
 function uid(){ return 'x'+Math.random().toString(36).slice(2,9); }
 function gFor(vn){ return S.vendors.find(v=>v.name===vn)?.groups||[]; }
 function calcPar(avg,ov){
-  if(ov!==null&&ov!==undefined&&ov!=='') return Number(ov);
-  const r=1*(Number(avg)||0);
+  var multiplier = 1;
+  if(ov!==null&&ov!==undefined&&ov!==''){ 
+    multiplier = ov
+  }  
+  const r=multiplier*(Number(avg)||0);
   if(r<0.5) return 0;
   return Math.round(r);
 }
