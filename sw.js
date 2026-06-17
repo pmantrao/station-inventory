@@ -1,6 +1,6 @@
 // Jandu Petroleum Inventory — Service Worker
 // Version: bump this string to force cache refresh when you update the app
-const CACHE_VERSION = 'jandu-inv-v7';
+const CACHE_VERSION = 'jandu-inv-v8';
 
 // Files to cache on install (must all succeed or SW won't install)
 const CORE_ASSETS = [
